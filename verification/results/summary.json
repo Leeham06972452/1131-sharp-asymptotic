@@ -1,0 +1,16 @@
+{
+  "status": "All numerical consistency checks passed; no formal proof certification.",
+  "python": "3.13.1",
+  "numpy": "2.4.2",
+  "scipy": "1.18.0",
+  "maximum_absolute_errors": {
+    "mass_identity": 1.4007892068512717e-16,
+    "rank_one_commutator": 1.3985787785349405e-17,
+    "exterior_transport": 5.218048215738236e-15,
+    "reciprocal_identity": 1.4921397450962104e-13,
+    "weighted_interpolation": 2.708944180085382e-14,
+    "exterior_factorization": 5.032264605020487e-10
+  },
+  "independent_defect_prediction": 0.03920424637991236,
+  "independent_scaled_excess_at_n_1024": 0.039175289377908484
+}

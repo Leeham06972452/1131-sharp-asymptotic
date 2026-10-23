@@ -1,0 +1,13 @@
+{
+  "compiler": "Tectonic 0.17.0 (XeTeX)",
+  "pages": 17,
+  "paper": "A4",
+  "margin": "1in",
+  "class": "amsart",
+  "abstract_sentence_count": 5,
+  "author_entry": false,
+  "undefined_references_or_citations": false,
+  "final_pass_overfull_boxes": 0,
+  "numerical_verification": "verification/results/summary.json",
+  "visual_review": "All 17 pages rendered; contact sheets and selected full pages inspected."
+}

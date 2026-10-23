@@ -1,0 +1,58 @@
+PRIOR WORK CHECKED ON 23 OCTOBER 2026
+
+Primary discussion:
+https://www.erdosproblems.com/forum/thread/1131
+Six comments were visible in the current thread. The April announcement
+and response were also indexed independently by web search. The current
+HTML was retrieved directly after the web reader returned HTTP 403.
+
+Already resolved or reported:
+1. Fejer solved the related maximum-norm interpolation problem, leading
+   to the Legendre--Gauss--Lobatto candidate. Szabados (1966) showed that
+   this candidate is not the integral minimizer for n>3.
+2. Erdos--Szabados--Varma--Vertesi (1994), Studia Sci. Math. Hungar. 29,
+   55--60, established the earlier logarithmic-error lower bound and the
+   coefficient-one constructive upper bound recorded in main.tex.
+3. Brutman--Toledano (1997), Comput. Math. Appl. 34(12),37--47, performed
+   numerical optimization through n=100 and extrapolation. The publisher's
+   abstract confirms the numerical scope; the thread reports their
+   numerical coefficient approximately 1.094219. The full publisher PDF
+   was not accessible in this review, so priority for a closed formula
+   is not asserted.
+   https://doi.org/10.1016/S0898-1221(97)00232-0
+4. Liam Price announced a disproof of coefficient 1 on 26 April 2026.
+   Nat Sothanaphan posted a preliminary check on 27 April and noted
+   the earlier numerical evidence. An accessible later repository gives
+   a mathematical disproof using roots of T_n-T_{n-2}/6, with eventual
+   coefficient at least 106/105, and provides a Lean development.
+   https://github.com/seanm27lol/erdos-1131-lean
+   The repository exposition was read; the Lean project was not compiled
+   here and the paper does not depend on its formalization.
+5. Z. Rafik's January preprint and forum update state unconditional
+   preliminary claims but make their first-order endpoint formula
+   conditional on endpoint universality. That conditional formula does
+   not establish the unrestricted sharp coefficient in main.tex.
+   https://doi.org/10.20944/preprints202601.0875.v1
+   The revised Zenodo file was not accessible; its linked forum summary
+   was read. No additional theorem is attributed to the unread file.
+6. mzn's 14 August comment reports certified small-n brackets (n=2..5)
+   and rational witnesses at further small sizes. These are finite-n
+   computations, not an asymptotic proof.
+
+Contribution claimed in this paper:
+The exact coefficient 2 Gamma(5/4)^2/Gamma(3/4)^2, its Jacobi construction,
+and a matching unrestricted lower bound, with the required endpoint and
+operator passages included in the paper. This is an independently
+reviewable analytic proof proposal, not an assertion of external
+acceptance or a formal proof-assistant certificate. The literature search
+does not purport to exhaust unpublished or inaccessible manuscripts.
+
+Terminology and analytic references checked:
+Jacobi polynomials, Gaussian quadrature, Christoffel functions, finite
+Hilbert transform, Muckenhoupt A_2 weights, reverse-Holder estimates,
+outer functions, Hardy spaces, trace class, Hilbert--Schmidt operators,
+fractional Sobolev space H^{1/2}, and fractional ground-state identity
+are conventional terms used in the cited sources. The working notes'
+informal labels were replaced by definitions and conventional terms.
+The beta, Darboux, and Bessel identities were checked against DLMF
+15.4.20,18.15.4_5,10.22.57. main.tex gives the normalizations it uses.

@@ -1,0 +1,1630 @@
+\documentclass[a4paper,11pt]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amssymb,mathtools,mathrsfs,esint,xurl}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue]{hyperref}
+\setlength{\emergencystretch}{2em}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\PV}{\operatorname{PV}}
+\newcommand{\HS}{\mathcal S_2}
+\newcommand{\R}{\mathbb R}
+\newcommand{\T}{\mathbb T}
+\newcommand{\dd}{\,d}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\Cstar}{C_*}
+\title{Sharp asymptotics for quadratic Lagrange interpolation}
+\date{}
+\begin{document}
+\begin{abstract}
+For distinct interpolation nodes in $[-1,1]$, let $M_n$ denote the minimum of the integral of the sum of the squares of their Lagrange fundamental polynomials.
+We prove $M_n=2-C_*/n+o(n^{-1})$, where $C_*=2\Gamma(5/4)^2/\Gamma(3/4)^2$.
+The endpoints together with the zeros of $P_{n-2}^{(5/4,5/4)}$ attain this coefficient.
+The lower bound follows from exact interpolation identities, compactness of an associated zero-free polynomial, and a weighted Hilbert-transform comparison.
+The limiting difference is a nonnegative fractional ground-state integral, with endpoint concentrations retained by lower semicontinuity.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $Y=\{y_1,\ldots,y_n\}\subset[-1,1]$ with distinct elements, write
+$\ell_j^Y(x)=\prod_{k\ne j}(x-y_k)/(y_j-y_k)$, and set
+\begin{equation}\label{minimum}
+ I_n(Y)=\int_{-1}^1\sum_{j=1}^n\ell_j^Y(x)^2\dd x,
+ \qquad M_n=\inf_Y I_n(Y).
+\end{equation}
+The problem of determining $M_n$ goes back to Erd\H{o}s
+\cite{erdos}. Fej\'er's solution of the corresponding maximum-norm
+problem suggested the Legendre--Gauss--Lobatto points. Szabados
+\cite{szabados} disproved their optimality for the integral problem
+for every $n>3$. Erd\H{o}s, Szabados, Varma and V\'ertesi
+\cite{esvv} proved $2-O((\log n)^2/n)\le M_n\le2-2/(2n-1)$.
+Brutman and Toledano \cite{bt} subsequently found numerical evidence
+against the proposed first-order coefficient $1$, using optimization
+through $n=100$ and extrapolation.
+
+The discussion of problem 1131 \cite{bloom} records a disproof of the
+coefficient-one conjecture announced by Price on 26 April 2026, followed
+by Sothanaphan's preliminary check on 27 April. An accessible subsequent
+proof and Lean development \cite{lean} use the roots of
+$T_n-\frac16T_{n-2}$ and establish an eventual coefficient at least
+$106/105$. The same discussion records reported exact small-$n$
+enclosures, and a preprint \cite{rafik} whose proposed first-order
+formula is conditional on an endpoint universality conjecture. Those
+results do not supply a sharp unrestricted coefficient. In particular,
+the contribution here is the matching lower bound, rather than a new
+disproof of coefficient $1$ or a claim that the numerical value had not
+been anticipated.
+
+\begin{theorem}\label{main}
+For the minimum in \eqref{minimum},
+\begin{equation}\label{answer}
+ \lim_{n\to\infty}n(2-M_n)
+ =\Cstar=2\frac{\Gamma(5/4)^2}{\Gamma(3/4)^2}
+ =1.0942198076132386\ldots.
+\end{equation}
+The arrays $X_n=\{-1,1\}\cup\{x:P_{n-2}^{(5/4,5/4)}(x)=0\}$
+satisfy $I_n(X_n)=2-\Cstar/n+o(n^{-1})$.
+\end{theorem}
+
+We prove a comparison which is useful independently of minimizers.
+Throughout the paper $I=(-1,1)$, $a(x)=1-x^2$, $s(x)=\sqrt{a(x)}$
+and $g(x)=a(x)^{1/4}$. Integrals without indicated endpoints are over
+$I$. All continuum operators act on $L^2(I,dx)$ unless another measure
+is specified. The finite Hilbert transform is
+$Hh(x)=\pi^{-1}\PV\int h(t)/(x-t)\dd t$; functions to which $|D|$
+is applied are extended by zero to $\R$, and $|D|h=(Hh)'$ on $I$.
+The classes $\mathcal S_1$ and $\HS$ denote the trace-class and
+Hilbert--Schmidt operators. Multiplication operators are written by
+their multiplying functions when this causes no ambiguity.
+
+\begin{theorem}\label{comparison}
+If $Y_n$ contains both endpoints and $I_n(Y_n)\le2+C_0/n$ for a fixed
+$C_0$, then $\liminf_n n(I_n(Y_n)-I_n(X_n))\ge0$. More precisely,
+along a subsequence attaining this lower limit there is a positive
+function $f$ such that
+\begin{equation}\label{defect}
+ \liminf_n n(I_n(Y_n)-I_n(X_n))\ge\mathcal D[f],\qquad
+ \mathcal D[f]=\frac1{4\pi}\iint_{I^2}
+ \frac{[g(x)f(y)-g(y)f(x)]^2}{f(x)f(y)(x-y)^2}\dd x\dd y<\infty.
+\end{equation}
+\end{theorem}
+
+The analytic ingredients used below are the classical Hilbert-transform
+theorem for Muckenhoupt $A_2$ weights, its reverse-H\"older consequence,
+the $L^p$ boundedness of circular conjugation, and standard Hardy-space
+boundary theory; see \cite{hmw,gcrf,duren}. On an interval, an $A_2$
+weight means a positive function $w$ for which
+$\sup_J(\fint_Jw)(\fint_Jw^{-1})<\infty$, with $J$ ranging over its
+subintervals. We use the interval versions of these theorems, obtained
+by reflection and extension. All problem-specific finite estimates,
+compactness statements and endpoint passages are proved below.
+
+\section{Jacobi interpolation and uniform reference estimates}
+
+We use the standard Jacobi normalization $P_m^{(\alpha,\alpha)}(1)
+=\Gamma(m+\alpha+1)/[\Gamma(\alpha+1)\Gamma(m+1)]$; see \cite{szego}.
+Temporarily fix $1<\alpha<3/2$, put $m=n-2$, $P=P_m^{(\alpha,\alpha)}$,
+$q=aP$, $N=m+\alpha+1/2$ and $\beta=3/2-\alpha$. The reference points
+are the endpoints and the zeros $x_i$ of $P$; endpoint coordinates are
+excluded from sums involving Gaussian weights. Let $\lambda_i$ be the
+Gaussian weights for $a^\alpha dx$, and put
+\begin{equation}\label{jacobi-constants}
+ C_m=2^{2\alpha+1}\frac{\Gamma(m+\alpha+1)^2}
+ {\Gamma(m+1)\Gamma(m+2\alpha+1)},\qquad
+ A_\alpha=\int a^{\alpha-1},\qquad
+ A_m=\sum_i\frac{\lambda_i}{a_i}.
+\end{equation}
+Here $a_i=a(x_i)$ and $s_i=s(x_i)$. Gaussian exactness and the
+Jacobi derivative identity give
+$\lambda_i=C_m/[a_iP'(x_i)^2]$ and
+$\ell_i^0(x)=q(x)/[a_iP'(x_i)(x-x_i)]$ for interior coordinates.
+Define
+$W_\alpha(x)=\PV\int a(t)^\alpha/(x-t)\dd t$ and
+$F_m(x)=\PV\int a(t)^\alpha P(t)/(x-t)\dd t$.
+These normalizations will be retained in every formula involving the
+second-kind function $F_m$.
+
+\begin{lemma}\label{jacobi-estimates}
+Uniformly on $[-1,1]$,
+\begin{equation}\label{PF-bounds}
+ |P(x)|\le Cn^{-1/2}(s+n^{-1})^{-\alpha-1/2},\qquad
+ |F_m(x)|\le Cn^{-1/2}(s+n^{-1})^{\alpha-1/2}.
+\end{equation}
+The reference angles have gaps comparable to $n^{-1}$, including the
+first and last gaps. The weights $W_i=n\lambda_i a_i^{-\alpha}$ satisfy
+$W_i\asymp s_i$ and
+\begin{equation}\label{weight-precision}
+ |W_i-\pi s_i|\le C/n,\qquad
+ W_i=(n/N)\pi s_i+O_K(n^{-2})
+\end{equation}
+on each compact interior interval $K$ in the second formula.
+The full reference square sum is bounded, and
+$\int (\ell_\pm^0)^2\le Cn^{-2}$ for the endpoint cardinals.
+\end{lemma}
+
+\begin{proof}
+The equations for $P$ and $F_m$ are respectively
+$aP''-2(\alpha+1)xP'+m(m+2\alpha+1)P=0$ and
+$aF_m''+2(\alpha-1)xF_m'+[m(m+2\alpha+1)+2\alpha]F_m=0$.
+The second follows by applying the Hilbert transform to the equation
+for $a^\alpha P$; that function and its first derivative vanish at the
+endpoints. Orthogonality identifies the Wronskian constant:
+\begin{equation}\label{wronskian}
+ a(PF_m'-P'F_m)+2\alpha xPF_m=C_m.
+\end{equation}
+Both $u(\theta)=s^{\alpha+1/2}P(\cos\theta)$ and
+$v(\theta)=s^{1/2-\alpha}F_m(\cos\theta)$ solve
+$y''+[N^2-(\alpha^2-1/4)\csc^2\theta]y=0$.
+The center values follow from the Gegenbauer generating function:
+if $r_j=(\alpha+1)_j/(2\alpha+1)_j$ and $\lambda=\alpha+1/2$,
+$P_{2k}(0)=(-1)^kr_{2k}(\lambda)_k/k!$ and
+$P_{2k+1}'(0)=(-1)^k2r_{2k+1}(\lambda)_{k+1}/k!$.
+The other center value vanishes by parity. Equation \eqref{wronskian}
+then fixes the complementary center data for $F_m$.
+Gamma-ratio estimates imply
+$|y(\pi/2)|+|y'(\pi/2)|/N\le Cn^{-1/2}$ for both solutions.
+Variation of constants and Gronwall give
+$|y|+|y'|/N\le Cn^{-1/2}\exp(C|\cot\theta|/N)$.
+Thus \eqref{PF-bounds} holds when $s\ge c/n$.
+
+For $0\le\theta\le1/N$, the positive ultraspherical integral
+representation gives $|P|\le P(1)$, $|P'|\le P'(1)$ and
+$P'(1)/P(1)=m(m+2\alpha+1)/[2(\alpha+1)]$.
+Consequently $P\asymp P(1)\asymp n^\alpha$ there. Integrating
+$(F_m/(Pa^\alpha))'=C_m/(a^{\alpha+1}P^2)$ from $\cos(1/N)$
+proves $|F_m|\le Cn^{-\alpha}$. Reflection treats the other endpoint.
+Sturm comparison gives separation at least $c/n$. Beyond a fixed
+multiple of $1/n$ the equation has frequency at least $N/\sqrt2$;
+comparison there, together with the preceding endpoint layer,
+gives the upper gap and first-root bounds.
+
+At a zero, \eqref{wronskian} and \eqref{PF-bounds} bound
+$|a_iP'(x_i)|^{-2}\le Cn^{-1}s_i^{2\alpha-1}$, whence
+$W_i\le Cs_i$. A local difference-quotient estimate for $u$ gives
+$|u'(\theta_i)|\le C\sqrt n$ and therefore the reverse bound,
+since $W_i=nC_ms_i/u'(\theta_i)^2$.
+For $\mathscr E=u'^2+(N^2-U)u^2$, where
+$U=(\alpha^2-1/4)\csc^2\theta$, one has $\mathscr E'=-U'u^2$.
+The displayed center formulas and duplication give
+$\mathscr E(\pi/2)=NC_m/\pi+O(n^{-1})$; the first-order
+gamma-ratio terms cancel. Integration yields
+$\mathscr E(\theta)=NC_m/\pi+O((ns^2)^{-1})$.
+At a zero this is $u'^2$. Inverting when $ns$ is large, and using
+$W_i\le Cs_i$ otherwise, proves \eqref{weight-precision}.
+
+For the remaining assertions, Gaussian partial fractions and
+\eqref{wronskian} give the exact identity
+\begin{equation}\label{square-identity}
+ \sum_j(\ell_j^0)^2-1
+ =\frac{B_\alpha P^2-2(\alpha-1)xPF_m}{C_m}
+ +\left(\frac{A_m-A_\alpha}{C_m}+\frac1{2P(1)^2}\right)(1+x^2)P^2,
+\end{equation}
+where
+$B_\alpha=A_\alpha(1+x^2-2\alpha)+2(\alpha-1)xW_\alpha$
+and $A_\alpha-A_m=C_m/[2\alpha P(1)^2]=O(n^{-2\alpha})$.
+One way to check the latter equality is Rodrigues' formula followed
+by $m$ integrations by parts in $F_m(1)$.
+If $G_b=H(a^b)\pi$, $b=\alpha-1$, then
+$B_\alpha=-a^2G_b'$ and $G_b'=O(a^{b-1})$.
+Indeed for $0<b<1$, its Pearson equation is
+$aG_b'+2bxG_b=2bG_b(1)$, whose odd solution is
+$G_b(1)[x+(2b-1)a^b\int_0^x a(t)^{-b}\dd t]$.
+Hence $B_\alpha=O(a^\alpha)$, and every term of
+\eqref{square-identity} is bounded by \eqref{PF-bounds}.
+Finally $\ell_\pm^0=(1\pm x)P/[2P(\pm1)]$ and
+$\int P^2=O(n^{2\alpha-2})$, also immediate from
+\eqref{PF-bounds}. This proves the endpoint mass estimate.
+\end{proof}
+
+\begin{proposition}\label{construction}
+For the reference array with parameter $1<\alpha<3/2$,
+\begin{equation}\label{cj}
+ I_n(X_n^\alpha)=2-\frac{c_J(\alpha)}n+o(n^{-1}),\qquad
+ c_J(\alpha)=2\frac{\Gamma(5/2-\alpha)\Gamma(\alpha)}
+ {\Gamma(2-\alpha)\Gamma(\alpha-1/2)}.
+\end{equation}
+Its largest coefficient in this parameter interval is $\Cstar$,
+attained at $\alpha=5/4$.
+\end{proposition}
+
+\begin{proof}
+On compact interior intervals the center-normalized differential
+equations in Lemma~\ref{jacobi-estimates} give complementary sine and
+cosine expansions, with function errors $O(n^{-3/2})$. In particular
+$nP^2/C_m$ converges weakly there to
+$1/(2\pi a^{\alpha+1/2})$, while $n\int xPF_m\to0$.
+For the last assertion, in angular coordinates the integrand is
+$n\cos\theta\,u(\theta)v(\theta)$: it is uniformly bounded outside
+the $1/n$ endpoint layers, those layers contribute $O(n^{-1})$,
+and interior oscillations have zero mean. The last term in
+\eqref{square-identity} has integral $O(n^{-2})$.
+Also
+$B_\alpha=-a[A_\alpha+(\alpha-1)W_\alpha'/\alpha]$,
+with $W_\alpha'$ bounded. Thus the endpoint majorant for
+$n|B_\alpha|P^2dx$ is $C\theta^{2-2\alpha}d\theta$ outside the
+first layer, and that layer contributes $O(n^{2\alpha-3})$.
+It follows that
+$c_J=-(2\pi)^{-1}\int B_\alpha a^{-\alpha-1/2}$.
+
+Solving $aW_\alpha'+2\alpha xW_\alpha=2\alpha A_\alpha$ with
+$W_\alpha(0)=0$ gives
+$W_\alpha'=2\alpha A_\alpha
+ {}_2F_1(1,1/2-\alpha;1/2;x^2)$.
+Beta integration and Gauss summation \cite[15.4.20]{dlmf} give
+\begin{align*}
+ c_J&=\frac{B(1/2,\alpha)B(1/2,3/2-\alpha)}{2\pi}
+       [1-4(\alpha-1)^2]\\
+ &=2\frac{\Gamma(5/2-\alpha)\Gamma(\alpha)}
+ {\Gamma(2-\alpha)\Gamma(\alpha-1/2)}.
+\end{align*}
+For example, the hypergeometric integral needed here is
+$\int a^{1/2-\alpha}{}_2F_1(1,1/2-\alpha;1/2;x^2)
+ =2(1-\alpha)B(1/2,3/2-\alpha)$; both beta integrals are convergent.
+Writing $p=\alpha-1/2$, $q=2-\alpha$, one has $p+q=3/2$ and
+$c_J=2\Gamma(p+1/2)\Gamma(q+1/2)/[\Gamma(p)\Gamma(q)]$.
+Strict concavity of $\log\Gamma(t+1/2)-\log\Gamma(t)$, whose second
+derivative is $\psi_1(t+1/2)-\psi_1(t)<0$, proves the assertion.
+\end{proof}
+
+The following estimates are the finite comparison input. For the
+interior reference mass matrix $B^0_{ij}=\int\ell_i^0\ell_j^0$, put
+$\Omega_n=\diag(\lambda_i a_i^{-\alpha})$, $W_n=n\Omega_n$,
+$R_n=n(\Omega_n-B^0)$ and $\mathcal M_n=W_n-R_n$. Extend all these
+matrices by zero on endpoint coordinates. Inverses of $W_n$ below
+always mean the inverse on the interior coordinates and zero on the
+two endpoint coordinates.
+
+\begin{lemma}\label{reference-rows}
+There are constants $\rho<1$ and $C$, depending only on $\alpha$, such
+that $0\le R_n\le\rho W_n$, $\tr R_n\le C$, and, for every $y\in[-1,1]$,
+\begin{equation}\label{row-bounds}
+ \left|\sum_i\pi s_i\ell_i^0(y)^2-\pi s(y)\right|\le C/n,
+ \qquad L(y)R_nL(y)^*\le C/n,
+\end{equation}
+where $L(y)=(\ell_i^0(y))_i$. With $k=\alpha-1/2$,
+\begin{equation}\label{entry-bound}
+ |(R_n)_{ij}|\le\frac Cn
+ \left(\frac{\min(s_i,s_j)}{\max(s_i,s_j)}\right)^k.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For $c>1$ set
+$J_m(c)=\int a^\alpha P^2/(c-x)$ and
+$\psi_i(c)=1/[a_iP'(x_i)(c-x_i)]$.
+The Gaussian resolvent error is
+\begin{equation}\label{resolvent}
+ e_m(c)=\int\frac{a^\alpha}{c-x}-\sum_i\frac{\lambda_i}{c-x_i}
+ =\frac{J_m(c)}{P(c)^2}>0,
+\end{equation}
+and the same error with a numerator $p(x)^2$, $\deg p<m$, is
+$p(c)^2e_m(c)$. Both statements follow by polynomial division and
+Gaussian exactness. Applying
+$u^r=(\sin\pi r/\pi)\int_0^\infty t^{r-1}u/(u+t)\dd t$
+with $r=2-\alpha$ and $u=a(x)$, and using
+$(a+t)^{-1}=[(c-x)^{-1}+(c+x)^{-1}]/(2c)$,
+$c=\sqrt{1+t}$, gives the exact positive factorization
+\begin{equation}\label{factorization}
+ R_n=\frac{n\sin\pi(2-\alpha)}\pi\int_1^\infty
+ (c^2-1)^{2-\alpha}J_m(c)
+ [\psi(c)\psi(c)^*+\psi(-c)\psi(-c)^*]\dd c.
+\end{equation}
+Positivity also justifies the integral passages by monotone convergence.
+Equation \eqref{PF-bounds} implies
+$nJ_m(c)\le C/\sqrt{c^2-1}$.
+Together with $|a_iP'(x_i)|^{-2}\le Cn^{-1}s_i^{2k}$, this bounds the
+same-end part of an entry, for $u=\min(s_i,s_j)$ and
+$v=\max(s_i,s_j)$, by
+$Cn^{-1}(uv)^k\int_0^1 h^\beta/[(h+u^2)(h+v^2)]\dd h$.
+Splitting at $u^2,v^2$ bounds the integral by $Cv^{-2k}$.
+The far part is integrable since $2\beta-2<-1$; for opposite-end
+indices one denominator stays bounded near either endpoint.
+This proves \eqref{entry-bound}, including $R_{ii}\le C/n$.
+
+For completeness, the strict relative bound is a sampling inequality,
+not an assumed spectral limit. Disjoint intervals of length $c/n$
+about the reference angles have $\sin\theta\asymp s_i$.
+The inequality $|h(t)|^2\le(2/|J|)\int_J|h|^2+2|J|\int_J|h'|^2$
+and the Legendre spectral inequality
+$\int a|p'|^2\le n(n-1)\int|p|^2$, $\deg p<n$, give
+$\sum_i s_i|p(x_i)|^2\le Cn\int|p|^2$.
+Since $\Omega_i\le Cs_i/n$, applying this to
+$p=\sum z_i\ell_i^0$ gives $B^0\ge c\Omega_n$.
+Thus $R_n\le(1-c)W_n$.
+
+We give the endpoint details of both row bounds. Put $f_0=a^{-1/2}$,
+$V_\alpha=\PV\int a(t)^{\alpha-1/2}/(x-t)\dd t$, and let
+$\varepsilon_m$ be the Gaussian error for the divided difference
+$(f_0(y)-f_0(t))/(y-t)$. The Stieltjes representation
+$f_0(x)=\pi^{-1}\int_1^\infty(c^2-1)^{-1/2}
+ [(c-x)^{-1}+(c+x)^{-1}]\dd c$ gives
+$\varepsilon_m'\ge0$ and
+$\varepsilon_m'\le Cn^{-2\alpha}s^{-3}$.
+Indeed $e_m(c)\le e_m(1)/c$ follows by expanding in even monomials,
+whose Gaussian errors are nonnegative, and
+$e_m(1)=C_m/[2\alpha P(1)^2]$.
+Differentiating the cardinal Cauchy transform and using
+\eqref{wronskian} now gives exactly
+\begin{equation}\label{weighted-row-exact}
+ \sum_i\pi s_i\ell_i^0(y)^2
+ =\pi s+\frac\pi{C_m}
+ [(1-2\alpha)ysPF_m-a^2P^2V_\alpha'-a^2P^2\varepsilon_m'].
+\end{equation}
+The Pearson equation used above, with exponent $\alpha-1/2$, gives
+$|V_\alpha'|\le Ca^{\alpha-3/2}$.
+Consequently the first two corrections are $O(n^{-1})$ by
+\eqref{PF-bounds}. The last is bounded by
+$Cn^{-2\alpha}sP^2\le C/n$, using separately $s\ge n^{-1}$ and
+$s\le n^{-1}$. Continuity includes the endpoints.
+
+For the second row bound in \eqref{row-bounds}, set
+$b=\alpha-1$, $G_b=\PV\int a^b/(y-t)\dd t$ and
+$H_m(c)=\sum_i\lambda_i/[a_i(c-x_i)]$.
+Partial fractions give the exact exterior interpolant
+\begin{equation}\label{exterior-mode}
+ q_c(y):=L(y)\psi(c)
+ =\frac{aP[G_b(y)-H_m(c)]-F_m(y)+y(A_\alpha-A_m)P(y)}{C_m(c-y)}.
+\end{equation}
+Gaussian positivity in the even-power expansion gives
+$0\le G_b(c)-H_m(c)\le Cn^{-2b}$ for $c\ge1$.
+To verify the rate, differentiate \eqref{resolvent} at $1$:
+if $\Lambda=m(m+2\alpha+1)$ and $D_m=A_\alpha-A_m$, then
+$e_m'(1)=-D_m[\alpha\Lambda/(\alpha^2-1)+\alpha/(\alpha-1)]$;
+the largest error is
+$\int a^{\alpha-2}-\sum_i\lambda_i/a_i^2=(D_m-e_m'(1))/2$.
+Also $|G_b(y)-G_b(c)|\le C(s^{2b}+(c-1)^b)$ for
+$y\ge0$, $1<c<2$, by the same Pearson formula.
+The second-kind equation implies
+$|F_m'|\le Cn^{2-\alpha}$ when $s\le n^{-1}$: integrate
+$(a^{-b}F_m')'=-(\Lambda+2\alpha)a^{-b-1}F_m$
+from $s\asymp n^{-1}$, where the bound follows from the transformed
+equation. Since $F_m(1)=D_mP(1)$, it follows that
+$|F_m-yD_mP|\le Cs^2n^{2-\alpha}$ in that layer.
+Writing $h=c-1$, \eqref{exterior-mode} therefore yields
+\begin{align}\label{mode-bounds}
+ |q_c(y)|&\le Cn^{-1/2}
+ \frac{s^{b+1/2}+s^\beta h^b}{h+s^2}&& (s\ge n^{-1},\ 0<h<1),\notag\\
+ |q_c(y)|&\le C\frac{s^2}{h+s^2}
+       (n^{1-b}+n^{1+b}h^b)&& (s\le n^{-1},\ 0<h<1).
+\end{align}
+For $q_{-c}$, $y\ge0$, and also for $q_c$ when $c\ge2$, the bounds
+are $Cn^{-1/2}/c$ and $Cn^{b-1}/c$ in the respective ranges.
+For the first line of \eqref{mode-bounds}, scaling $h=s^2u$ gives
+\begin{equation*}
+ s^{2b+1}\int_0^1\frac{h^\beta}{(h+s^2)^2}\dd h\le C,
+ \qquad s^{2\beta}\int_0^1\frac{h^{\beta+2b}}{(h+s^2)^2}\dd h\le C.
+\end{equation*}
+For the second line, split at $h=n^{-2}$; its bounds become
+$Cn^{1-b}$ below that point and $Cn^{b-1}h^{b-1}$ above it.
+Their squared integrals against $h^\beta dh$ are $O(n^{-1})$,
+because $b+\beta=1/2$. The opposite-end and far-exterior integrals
+are also $O(n^{-1})$, since
+$\int_1^\infty(c^2-1)^\beta c^{-2}\dd c<\infty$.
+Insertion into \eqref{factorization} proves
+$L(y)R_nL(y)^*\le C/n$. Reflection completes all cases.
+\end{proof}
+
+\section{Finite comparison and polynomial bounds}
+
+From now on $\alpha=5/4$ and $X_n=X_n^{5/4}$, although estimates
+whose proofs work for $1<\alpha<3/2$ retain that parameter.
+For another endpoint-containing array put
+$A_{ij}=\ell_j^0(y_i)$, $J_n=A^*A-I$, $U_n=A^*-A^{-1}$ and
+$V_n=W_n^{1/2}U_n$. The endpoint rows of $A$ are the corresponding
+rows of the identity. A change of the cardinal basis gives the following
+exact formula, with the indicated estimate for the omitted mass blocks:
+\begin{equation}\label{finite-comparison}
+ n(I_n(Y)-I_n(X_n))=-\tr(W_nJ_n)+\tr(R_nJ_n)
+ +\tr(\mathcal M_nU_nU_n^*)+\epsilon_{n,e},\qquad
+ |\epsilon_{n,e}|\le Cn^{-1/2}\norm{V_n}_{\HS}.
+\end{equation}
+Indeed $U_nU_n^*=J_n+A^{-1}A^{-*}-I$, and the interior mass is
+$(W_n-R_n)/n$. For the endpoint estimate, positivity of the full
+old mass matrix gives
+$(B^0_{IE})^*(B^0_{II})^{-1}B^0_{IE}\le B^0_{EE}$.
+Since $B^0_{II}\le W_n/n$, Lemma~\ref{jacobi-estimates} yields
+$\norm{W_n^{-1/2}nB^0_{IE}}_{\HS}\le Cn^{-1/2}$.
+If $E=A-I$ and $G=A^{-1}-I$, then $G e_\pm=-U_ne_\pm$;
+the endpoint diagonal block of $A^{-1}A^{-*}-I$ is zero.
+Cauchy--Schwarz proves \eqref{finite-comparison} without an
+unweighted inverse bound.
+
+Let $K_n$ be the reproducing kernel of polynomials of degree less than
+$n$ in $L^2(dx)$, and let $\chi_n(x)=K_n(x,x)^{-1}$.
+The following uniform estimate will be used also near the endpoints:
+\begin{equation}\label{christoffel}
+ \chi_n(\cos\theta)=\pi\sin\theta/n+O(n^{-2}),
+ \qquad 0\le\theta\le\pi.
+\end{equation}
+Here is an elementary verification. Christoffel--Darboux gives
+$2K_n(x,x)=n^2P_n(x)^2+aP_n'(x)^2$, where $P_n(1)=1$.
+Put $u=\sqrt{\sin\theta}P_n(\cos\theta)$ and $N_0=n+1/2$.
+Then $u''+[N_0^2+(4\sin^2\theta)^{-1}]u=0$, so for
+$E=u^2+(u'/N_0)^2$, $|E'|\le E/(4N_0\sin^2\theta)$.
+The center binomial formulas give $E(\pi/2)=2/(\pi N_0)+O(N_0^{-2})$.
+Integration gives $E=2/(\pi N_0)+O((N_0^2s)^{-1})$ when
+$\theta\in[1/n,\pi-1/n]$. Since
+$2sK_n=n^2u^2+(u'-\tfrac12\cot\theta\,u)^2$, this implies
+$K_n=n/(\pi s)+O(s^{-2})$. Invert when $ns$ exceeds a sufficiently
+large constant. In the remaining endpoint range, Markov's inequality
+$|P_j(\cos\theta)-1|\le j^2\theta^2/2$ gives $K_n\ge c n^2$
+by summing $j\le c'n$; both terms of \eqref{christoffel} are then
+$O(n^{-2})$.
+
+\begin{lemma}\label{coercivity}
+Every distinct array satisfies $I_n(Y)\ge2-C/n$. If it contains the
+endpoints and $I_n(Y)\le2+C_0/n$, then
+\begin{equation}\label{finite-bounds}
+ \norm{V_n}_{\HS}\le C,\quad
+ \pi\sum_i s(y_i)=2n+O(1),\quad
+ \mathscr X_n:=I_n(Y)-\sum_i\chi_n(y_i)=O(n^{-1}),\quad
+ \norm{B_Y}\le C/n,
+\end{equation}
+where $(B_Y)_{ij}=\int\ell_i^Y\ell_j^Y$.
+\end{lemma}
+
+\begin{proof}
+The residual $r_i=\ell_i^Y-\chi_n(y_i)K_n(\cdot,y_i)$ is orthogonal
+to the comparison kernel, so
+$\int(\ell_i^Y)^2=\chi_n(y_i)+\norm{r_i}_2^2$.
+Consequently \eqref{christoffel} gives
+$\pi\sum_i s(y_i)\le nI_n(Y)+C$.
+By \eqref{row-bounds}, the uniform reference square-sum bound and
+\eqref{weight-precision},
+\begin{equation}\label{signed-coarse}
+ \tr(W_nJ_n)=\pi\sum_i s(y_i)-2n+O(1)
+ \le n(I_n(Y)-2)+C.
+\end{equation}
+The reference sum is $2n/\pi+O(1)$: the transformed Jacobi equation
+gives $N\theta_i=\pi i+O(1)$ uniformly, by integrating its phase
+equation from $\theta\asymp n^{-1}$, and summing the Lipschitz
+function $\sin\theta$ gives the assertion.
+
+By \eqref{row-bounds}, every row of $E=A-I$ has
+$E_iR_nE_i^*\le C/n$. Hence
+$\norm{R_n^{1/2}E^*}_{\HS}\le C$ and, writing
+$\mathcal P=\norm{V_n}_{\HS}^2$,
+$\norm{R_n^{1/2}G}_{\HS}\le C+\sqrt{\rho\mathcal P}$.
+As $A^{-1}A^{-*}-I=G+G^*+GG^*$,
+$|\tr\{R_n(A^{-1}A^{-*}-I)\}|
+ \le\rho\mathcal P+C\sqrt{\mathcal P}+C$.
+Using this and \eqref{signed-coarse} in the equivalent form of
+\eqref{finite-comparison} gives
+\begin{equation}\label{coercive-form}
+ 2n(I_n(Y)-2)\ge n(I_n(X_n)-2)
+ +(1-\rho)\mathcal P-C\sqrt{\mathcal P}-C.
+\end{equation}
+Proposition~\ref{construction} and completion of the square prove
+the lower bound and the first assertion of \eqref{finite-bounds}
+for endpoint-containing arrays. The finite identity then also bounds
+$\tr(W_nJ_n)$ below, yielding the sine sum and the excess bound.
+
+For the global mass estimate let $\Lambda=\diag(\chi_n(y_i))$ and
+$G_{ij}=\sqrt{\chi_n(y_i)\chi_n(y_j)}K_n(y_i,y_j)$.
+Then $G_{ii}=1$, $B_Y=\Lambda^{1/2}G^{-1}\Lambda^{1/2}$, and
+$P=B_Y+\Lambda^{1/2}G\Lambda^{1/2}-2\Lambda\succeq0$ has
+$\tr P=\mathscr X_n$. Thus $B_Y\le2\Lambda+\mathscr X_nI\le CI/n$.
+
+To remove the endpoint hypothesis in the lower bound, write
+$S=\sum\ell_i^2$. At either boundary outside the node hull the
+extreme cardinal has modulus at least one, and therefore
+$S(1),S(-1)\ge1$. Under dilation of the nodes about a point $c$
+of their hull the derivative at scale one is
+$I_n-(1-c)S(1)-(1+c)S(-1)<0$ if $I_n<2$.
+This sign persists throughout admissible dilation. Expand until one
+endpoint is reached, then expand about that endpoint until the other
+is reached. The integral decreases, proving the unrestricted bound.
+The case $n=1$ is immediate.
+\end{proof}
+
+For later use we record further consequences with their justifications.
+Normalize the nodal polynomial $Q_n$ to leading coefficient $2^{n-1}$.
+Then
+\begin{equation}\label{Q-bounds}
+ c\le\norm{Q_n}_2\le C,\qquad
+ n\sum_jQ_n'(y_j)^{-2}\le C.
+\end{equation}
+Indeed $Q_n=T_n-\mathcal I_YT_n$, and the mass bound in
+\eqref{finite-bounds} controls the interpolant of the bounded nodal
+data $T_n(y_j)$. The lower bound is the least norm for a prescribed
+leading coefficient, attained by the Legendre polynomial; its squared
+norm tends to $\pi/4$. To prove the second assertion, put
+$Z_n=\sum_j\int(x-y_j)^2\ell_j^Y(x)^2\dd x
+ =\norm{Q_n}_2^2\sum_jQ_n'(y_j)^{-2}$.
+The residual decomposition above and Christoffel--Darboux give
+$Z_n\le C/n+8\mathscr X_n$:
+the comparison term for a single node is bounded by
+$C\chi_n(y_j)^2[p_{n-1}(y_j)^2+p_n(y_j)^2]\le C/n^2$,
+where $p_j=\sqrt{j+1/2}P_j$ and
+$p_{n-1}(\cos\theta)^2+p_n(\cos\theta)^2\le C/(s+n^{-1})$.
+The latter follows from the same differential-equation bound used in
+\eqref{christoffel}; in the first layer use $|P_j|\le1$.
+
+Bounded objective implies that the empirical angular measures tend
+to $d\theta/\pi$. To see this without a spacing assumption, let $E$
+be the orthonormal-polynomial evaluation matrix. Since
+$I_n=\tr((E^*E)^{-1})\le C$, the arithmetic--geometric mean inequality
+gives $\det(E^*E)\ge(n/C)^n$.
+Factoring the determinant into leading coefficients and the
+Vandermonde product gives
+\begin{equation*}
+ \liminf_{n\to\infty}\frac2{n^2}\sum_{i<j}\log|y_i-y_j|
+ \ge-\log2.
+\end{equation*}
+For any weak limit $\mu$ of the empirical measures, truncating the
+logarithmic kernel below gives logarithmic energy at least $-\log2$.
+The cosine expansion
+$\log|\cos\theta-\cos\phi|
+ =-\log2-2\sum_{k\ge1}\cos(k\theta)\cos(k\phi)/k$,
+read by Abel regularization, shows that the energy is at most
+$-\log2$, with equality only if every nonconstant cosine moment
+vanishes. Thus the limit is the arcsine measure. This proves the
+assertion and uniform convergence of the ordered angular quantiles
+to the uniform quantile map.
+
+\begin{lemma}\label{bulk-spacing}
+On each compact subinterval of $(0,\pi)$ the ordered new angles
+$\phi_i=\arccos y_i$ have two-sided gaps comparable to $n^{-1}$.
+Their normalized kernel Gram matrices satisfy
+$c_KI\le G_K\le C_KI$ and $\norm{G_K-I}_{\HS}\le C_K$.
+\end{lemma}
+
+\begin{proof}
+The excess identity is
+$\mathscr X_n=\sum_i\chi_n(y_i)[(G^{-1})_{ii}-1]$.
+On a compact interior interval $\chi_n\ge c_K/n$, and Schur
+complement inversion gives $(G^{-1})_{KK}\ge G_K^{-1}$.
+Since $\tr G_K$ equals its dimension, its eigenvalues $\mu_j$ obey
+$\sum_j(\mu_j-1)^2/\mu_j\le C_K$.
+This gives the two spectral bounds and the Hilbert--Schmidt bound.
+The unit kernel vector
+$u_n(\theta)=(p_j(\cos\theta))_{j<n}/\sqrt{K_n(\cos\theta,\cos\theta)}$
+has derivative norm at most $C_Kn$. The spectral lower bound on a
+two-node principal matrix gives
+$\norm{u_n(\phi_i)-u_n(\phi_j)}^2\ge2c_K$, proving separation.
+
+For the upper bound, a gap of length $H/n$ with midpoint $t$ in a
+smaller fixed interval admits the nonnegative polynomial
+$p_t(\cos\theta)=F_m(\theta-t)+F_m(\theta+t)$, where here
+$m=\lfloor n/2\rfloor$ and
+$F_m(u)=m^{-1}[\sin(mu/2)/\sin(u/2)]^2$ is the Fej\'er kernel.
+It has degree less than $n$, $\norm{p_t}_2\ge c\sqrt n$, and
+$0\le p_t(\cos\theta)\le Cn/(1+n|\theta-t|)^2$.
+Separation inside a larger compact interval and the bound $O(1/n)$
+per sample outside it give
+$\sum_i p_t(y_i)\le C[n/(1+H)+1]$.
+On the other hand, synthesis and
+$\norm{\ell_i^Y}_2\le C/\sqrt n$ give
+$\norm{p_t}_2\le Cn^{-1/2}\sum_i p_t(y_i)$.
+It follows that $c\le C/(1+H)+C/n$, so $H$ is bounded.
+\end{proof}
+
+\section{Boundary convergence of the associated polynomials}
+
+Define analytic polynomials in the disk by
+\begin{equation}\label{polynomials}
+ F_n(z)=2z^nQ_n((z+z^{-1})/2),\qquad
+ b_n(z)=F_n(z)-zF_n'(z)/(2n).
+\end{equation}
+They have constant coefficient one, and
+\begin{equation}\label{boundary-pair}
+ b_n(e^{i\theta})=e^{in\theta}
+ [Q_n(\cos\theta)-isQ_n'(\cos\theta)/n],\qquad
+ f_n(x):=|b_n|^2=Q_n^2+aQ_n'^2/n^2.
+\end{equation}
+All zeros of $F_n$ are on the unit circle, counted with multiplicity.
+The function
+$H_n=1-zF_n'/(nF_n)
+ =(2n)^{-1}\sum_{\xi:F_n(\xi)=0}(\xi+z)/(\xi-z)$
+has positive real part in the disk and $b_n=F_n(1+H_n)/2$.
+Thus $b_n$ is zero-free there. Its possible boundary zeros are the
+simple zeros at $\pm1$ corresponding to endpoint nodes.
+
+We will use the exact reciprocal identity
+\begin{equation}\label{reciprocal}
+ \int\frac{s}{f_n}\dd x=\pi n\sum_j Q_n'(y_j)^{-2}\le C.
+\end{equation}
+Here is a derivation, including the endpoint justification. First move
+all nodes into the open interval. Since $\deg b_n<2n$ and it is
+zero-free on the closed disk, the identity
+$Q_n/f_n=\tfrac12[z^n/b_n(z)+z^{-n}/b_n(z^{-1})]$ on the circle
+shows by Fourier orthogonality that $Q_n$ is the degree-$n$
+orthogonal polynomial for $dx/(sf_n)$. The same Fourier calculation,
+or integration of the Cauchy kernel on the circle, gives
+\begin{equation}\label{prufer-cauchy}
+ \int\frac{Q_n(t)}{z-t}\frac{dt}{s(t)f_n(t)}
+ =\frac{\pi w(z)^n}{\sqrt{z^2-1}\,b_n(w(z))},\qquad
+ w(z)=z-\sqrt{z^2-1},
+\end{equation}
+where the square root is asymptotic to $z$ at infinity.
+For clarity, expanding the Cauchy kernel uses
+$(z-\cos\theta)^{-1}=(1+2\sum_{k\ge1}w^k\cos k\theta)/\sqrt{z^2-1}$;
+only the positive frequencies $z^n/b_n(z)$ remain in the integral.
+At a zero $y_j$, the second-kind quotient and
+\eqref{prufer-cauchy} give the Gaussian weight
+$\lambda_j=\pi/[n f_n(y_j)]=\pi n/[a(y_j)Q_n'(y_j)^2]$.
+Gaussian exactness on the polynomial $a$ proves \eqref{reciprocal}.
+If an endpoint is a node, move it inward by $\varepsilon$ at fixed
+$n$. With $t$ its distance from that endpoint, the denominator obeys
+$f_{n,\varepsilon}\ge c_n(t+\varepsilon^2)$: the derivative term
+supplies $t$, and the polynomial value supplies $\varepsilon^2$
+when $t$ is smaller. Hence $s/f_{n,\varepsilon}\le C_nt^{-1/2}$.
+Dominated convergence proves the endpoint version. The bound is now
+\eqref{Q-bounds}.
+
+The Legendre derivative inequality and \eqref{Q-bounds} imply
+$\int_0^\pi s|b_n|^2d\theta\le C$; \eqref{reciprocal} gives
+$\int_0^\pi s^2|b_n|^{-2}d\theta\le C$.
+Since $\log^p(1+t)\le C_pt$ and $\log\sin\theta$ belongs to every
+finite $L^p$, the positive and negative parts of $u_n=\log|b_n|$
+are uniformly bounded in every finite angular $L^p$.
+The normalized analytic logarithms $\log b_n(0)=0$ therefore have
+bounded $H^p$ norms for $1<p<\infty$, by circular conjugation.
+Also $(1-z^2)b_n$ is bounded in $H^2$.
+After extraction $F_n$ converges locally uniformly: the generating
+function gives $|z^jp_j((z+z^{-1})/2)|\le C_r$ on $|z|\le r<1$;
+Cauchy--Schwarz in the Legendre coefficients of $Q_n$, followed by
+$\sum_{j\le n}r^{2(n-j)}\le C_r$, bounds $F_n$ on each smaller disk.
+The derivative term in \eqref{polynomials} tends locally to zero,
+so $b_n$ has the same local limit $F$. Hurwitz's theorem gives a
+zero-free $F$ with $F(0)=1$. The logarithms converge locally to
+$\log F$ and weakly in $H^p$.
+In particular
+\begin{equation}\label{outer}
+ \log F(z)=\frac1{2\pi}\int_0^{2\pi}
+ \frac{e^{it}+z}{e^{it}-z}\log|F(e^{it})|\dd t,
+ \qquad \fint_\T\log|F|=0.
+\end{equation}
+Thus $F$ is outer; this also excludes singular logarithmic terms at
+the endpoints before any boundary compactness is used.
+
+\begin{lemma}\label{local-a2}
+On every compact interior interval the weights $f_n$ and $f_n^{-1}$
+have uniformly bounded $A_2$ characteristics and uniformly bounded
+$L^{1+\varepsilon}$ norms for some $\varepsilon>0$.
+\end{lemma}
+
+\begin{proof}
+Write $d_i=Q_n'(y_i)$. Complex sampling at separated interior points
+$t_j+ih/n$ gives, for $\deg p<n$,
+$\sum_j|p(t_j+ih/n)|^2\le Cn\norm p_2^2$.
+Indeed orthogonality of associated Legendre polynomials gives
+$\int a^r|p^{(r)}|^2\le(2n)^{2r}\norm p_2^2$.
+The point-evaluation inequality on disjoint intervals of length $c/n$
+therefore bounds the derivative samples by
+$Cn(C_Kn)^{2r}\norm p_2^2$. Taylor expansion and the $\ell^2$
+triangle inequality sum these estimates with factors $(h/n)^r/r!$.
+The mass bound in \eqref{finite-bounds} implies that the matrix
+$C_{ji}=\ell_i^Y(y_j+i\epsilon)$, $\epsilon=h/n$, is bounded on
+every interior square block. Since
+$|Q_n(y_j+i\epsilon)/(i\epsilon d_j)|^2
+ =\prod_{k\ne j}[1+\epsilon^2/(y_j-y_k)^2]$
+is bounded above and below on such rows, the matrix
+$D_{ji}=i\epsilon d_j/[d_i(y_j-y_i+i\epsilon)]$ is bounded too.
+For a consecutive block $J$ and $Y=\diag(y_j)$,
+$[Y,D]+i\epsilon D=i\epsilon(d_j/d_i)_{j,i\in J}$.
+Taking the rank-one norm and subtracting the midpoint from $Y$ yields
+\begin{equation}\label{discrete-a2}
+ \left(\sum_{i\in J}|d_i|^2\right)
+ \left(\sum_{i\in J}|d_i|^{-2}\right)\le C_K|J|^2,
+\end{equation}
+because the block diameter is at most $C_K|J|/n$.
+In particular neighboring derivative magnitudes have bounded ratios.
+
+On a consecutive cell $[r,t]$, let $\Delta=t-r$ and
+$L(x)=\log|Q_n(x)/[(x-r)(x-t)]|$.
+Then $|L''|\le C_Kn^2$, while its two endpoint values differ by a
+bounded amount by \eqref{discrete-a2}. Thus $|L'|\le C_Kn$ and
+$|Q_n/[(x-r)(x-t)]|\asymp |d_i|/\Delta$ there.
+Writing $u=(x-r)/\Delta$, the two terms in \eqref{boundary-pair}
+are controlled by $u(1-u)$ and
+$1-2u+\Delta L'u(1-u)$ respectively. The first is bounded below
+away from the cell ends, and the second is bounded below near those
+ends. Consequently $f_n\asymp_K |d_i|^2/n^2$ on the entire cell.
+Comparison with cellwise constant weights transfers
+\eqref{discrete-a2} to continuous $A_2$; partial cells use the
+neighboring ratio bound. The weighted $L^1$ bound for $f_n$, Jensen's
+inequality and the global logarithmic bounds control the means of
+both weights on fixed intervals. The reverse-H\"older theorem for
+$A_2$ weights \cite{gcrf} proves the last assertion.
+\end{proof}
+
+\begin{lemma}\label{boundary-compactness}
+After extraction, $b_n\to F$ and $b_n^{-1}\to F^{-1}$ strongly in
+$L^2$ on compact interior arcs. Their normalized logarithms converge
+strongly in every finite angular $L^p$ on the whole circle.
+If $\gamma_0(\theta)=\tfrac14(\theta-\pi/2)$ and
+$\delta=\operatorname{Im}\log F-\gamma_0$, then the step functions
+with values $n(\phi_i-\theta_i)$ converge locally strongly in every
+finite $L^p$ to $\delta$.
+\end{lemma}
+
+\begin{proof}
+Christoffel--Darboux and the center-normalized Legendre equation give,
+uniformly on every compact interior angular square,
+$G_{ij}=\operatorname{sinc}(n(\phi_i-\phi_j))+O_K(n^{-1})$.
+This follows directly by substituting the complementary sine and
+cosine expansions of $P_n,P_{n-1}$ in the kernel formula; the
+difference between $(2\sin((\phi_i-\phi_j)/2))^{-1}$ and
+$(\phi_i-\phi_j)^{-1}$ is bounded, and the diagonal is obtained by
+differentiation. In particular, for $h_i=n(\phi_{i+1}-\phi_i)$,
+Lemma~\ref{bulk-spacing} gives $c\le h_i\le C$ and
+$\sum_i\operatorname{sinc}^2h_i\le C$.
+Choose a nearest positive integer multiple $\pi k_i$ except for
+the bounded number of gaps near zero. Then
+$\sum_i|h_i-\pi k_i|^2\le C$ and
+$\sum_i|h_i-\pi k_i|=O(\sqrt n)$.
+Equidistribution on each fixed interval gives
+$\sum_i h_i-\pi\#\{i\}=o(n)$, so
+$\sum_i(k_i-1)=o(n)$ and
+\begin{equation}\label{gap-density}
+ n^{-1}\sum_i|h_i-\pi|^2\longrightarrow0.
+\end{equation}
+Thus every fixed number of neighboring gaps approaches the $\pi$
+spacing outside a set of indices of density tending to zero.
+
+Fix such interior roots $y_n$ and write $s_n=s(y_n)$.
+Define $P_n(t)=nQ_n(y_n+s_nt/n)/(s_nQ_n'(y_n))$.
+Its scaled roots tend to $\pi j$, $j\in\mathbb Z$, and
+$P_n(0)=0$, $P_n'(0)=1$.
+The logarithmic curvature after removing the central and next root
+is uniformly bounded on that cell. Neighboring derivative ratios,
+from \eqref{discrete-a2}, then bound
+$c_n=P_n''(0)/2=-\sum_{j\ne0}r_{j,n}^{-1}$.
+Separation gives
+$\sum_{|r_{j,n}|>R}|r_{j,n}|^{-2}\le C/R+C/n$.
+The exact canonical product
+$P_n(t)=t e^{c_nt}\prod_{j\ne0}(1-t/r_{j,n})e^{t/r_{j,n}}$
+therefore tends, after extraction, to $e^{ct}\sin t$ locally
+uniformly with derivatives. Applying \eqref{discrete-a2} on each
+fixed block $-M\le j\le M$ gives
+$(\sum e^{2c\pi j})(\sum e^{-2c\pi j})\le C(2M+1)^2$.
+Letting $M$ increase forces $c=0$.
+A diagonal argument in the window size and the tolerance, using
+\eqref{gap-density}, shows that this sine approximation holds on
+all but a vanishing fraction of the interior cells.
+
+For $\theta=\phi_i+u/n$ in such a cell, the brackets in
+\eqref{boundary-pair}, divided by $s(y_i)Q_n'(y_i)/n$, are
+$\sin(-u)-i\cos(-u)+o(1)=-ie^{-iu}+o(1)$ uniformly.
+Their modulus is bounded below. Hence
+$\sigma_n=b_n/\overline{b_n}$ differs in local $L^2$ by $o(1)$
+from the step function with values $-e^{2in\phi_i}$.
+The full Gram bound also gives
+\begin{equation}\label{circle-energy}
+ \sum_{i\ne j}\frac{|e^{2in\phi_i}-e^{2in\phi_j}|^2}{(i-j)^2}
+ \le C_K.
+\end{equation}
+Indeed multiply the sinc kernel entries by
+$n(\phi_i-\phi_j)/(i-j)$ and use the two gap bounds; the squared
+$O(1/n)$ errors sum to $O(1)$.
+Piecewise linear interpolation on the uniform index grid is bounded
+in $H^{1/2}$ by \eqref{circle-energy}; pairs of adjacent cells use
+the adjacent differences, already included in that sum. Its squared
+$L^2$ distance from the step function is at most
+$Cn^{-1}\sum_i|e^{2in\phi_{i+1}}-e^{2in\phi_i}|^2=o(1)$.
+Compactness gives a strong local $L^2$ limit $\sigma$, with
+$|\sigma|=1$ and $\sigma\in H^{1/2}_{\rm loc}$.
+The quantile maps between the index grid and the actual cells are
+uniformly bi-Lipschitz locally and tend uniformly to the identity.
+Composition preserves the strong limit, first for continuous test
+functions and then by $L^2$ approximation. Thus $\sigma_n\to\sigma$
+locally strongly.
+
+Set $B_n=(1-z^2)b_n$. Weak $H^2$ convergence gives weak local $L^2$
+convergence of $b_n$ to $F$; $F$ is nonzero almost everywhere by
+\eqref{outer}. Passing to $b_n=\sigma_n\overline{b_n}$ shows
+$\sigma=F/\overline F$. We spell out the upgrade to strong amplitude
+convergence. For a smooth cutoff $\chi$ in an interior arc let
+$\tau=(1-e^{2i\theta})\sigma/\overline{1-e^{2i\theta}}$ and
+$h_n=B_n-(1-z^2)F$. Reverse-H\"older in Lemma~\ref{local-a2} and
+strong convergence of the bounded quotients imply
+$\chi h_n=\tau\chi\overline{h_n}+o_{L^2}(1)$.
+Here $h_n$ is weakly null in $H^2$ and has zero constant coefficient.
+Let $P_+$ be projection onto the nonnegative circular Fourier modes,
+and $P_-=I-P_+$. A smooth cutoff extension $\tau_e$ of $\tau$
+belongs to $L^\infty\cap H^{1/2}$ globally. Its commutator with
+$P_+$ is Hilbert--Schmidt, because its squared matrix sum is
+$\sum_k|k||\widehat{\tau_e}(k)|^2$. Therefore
+\begin{align*}
+ P_-(\chi h_n)&=[P_-,\chi]h_n\longrightarrow0,\\
+ P_+(\chi h_n)&=[P_+,\tau_e]\chi\overline{h_n}
+ +\tau_e[P_+,\chi]\overline{h_n}+o_{L^2}(1)\longrightarrow0.
+\end{align*}
+Both commutators are compact and their inputs are weakly null.
+This proves strong local $L^2$ convergence of $b_n$.
+Convergence in measure, nonvanishing of $F$, and the uniform
+$L^{2+\varepsilon}$ bound for $b_n^{-1}$ prove the reciprocal
+convergence by uniform integrability. The same reasoning with
+$|\log t|^{p+1}\le C_p(t+t^{-1})$ proves local logarithmic convergence
+in every finite $L^p$. The global bounds at a larger exponent make
+the endpoint logarithmic tails uniformly small. Thus the real parts
+of the logarithms converge globally in every finite $L^p$; circular
+conjugation gives the same statement for their imaginary parts.
+
+It remains to fix the real displacement rather than its value
+modulo $\pi$. Normalize $\gamma_n=\operatorname{Im}\log b_n$ by
+$\log b_n(0)=0$. On $(\phi_i,\phi_{i+1})$, with
+$q_n(\theta)=Q_n(\cos\theta)$, the positive-real function $H_n$
+above gives exactly
+\begin{equation}\label{unwrapped}
+ \gamma_n(\theta)=n\theta-\pi i+
+ \arctan\frac{q_n'(\theta)}{nq_n(\theta)},\qquad
+ \gamma_n(\phi_i)=n\phi_i-\pi(i-1/2).
+\end{equation}
+The arctangent is its principal value; the normalized logarithm
+fixes the displayed branch. On the cells with the sine approximation
+the continuous argument differs uniformly by $o(1)$ from its left
+nodal value. On the other cells that difference is bounded by the
+upper gap constant plus $\pi$, so their total contribution tends
+to zero in every finite local $L^p$.
+For the reference nodes,
+$n\theta_i-\pi(i-1/2)=\gamma_0(\theta_i)+O_K(n^{-1})$,
+by the root-anchored Jacobi expansion. Subtracting this identity
+from \eqref{unwrapped} and transferring quantile grids proves the
+last assertion of the lemma.
+\end{proof}
+
+We specify the embeddings used for the remaining matrix limits.
+Order both arrays in increasing angle, starting with the endpoint
+$1$, and conjugate their matrices by
+$\epsilon_i=(-1)^{i+1}$, the signs of the corresponding nodal
+derivatives. Map the $i$th coordinate to a constant of height
+$\sqrt{n/\pi}$ on $((i-1)\pi/n,i\pi/n)$, and then apply the unitary
+map $h(\theta)\mapsto h(\arccos x)/\sqrt{s(x)}$ to physical $L^2$.
+Extend $A_n,A_n^{-1}$ by the identity off the step space, and positive
+finite mass operators by zero. These conventions preserve every
+finite trace and norm identity. In particular $D_n=W_n^{1/2}$ tends
+strongly to $D=\sqrt\pi\,g$.
+
+We shall need convergence at both nodal grids. If $p_n$ has
+trigonometric degree at most $C_1n$ and $t_j$ are $c/n$ separated
+in $K\Subset K_1$, then, for every $M\ge3$,
+\begin{equation}\label{sampling}
+ \frac1n\sum_{t_j\in K}|p_n(t_j)|^2
+ \le C\int_{K_1}|p_n|^2
+ +C_{K,K_1,M}n^{1-M}\int_\T|p_n|^2.
+\end{equation}
+To prove it, reproduce $p_n$ with a smooth Fourier cutoff kernel
+$V_n$, for which $|V_n(t)|\le C_Mn(1+n\operatorname{dist}(t,2\pi\mathbb Z))^{-M}$
+and $\norm{V_n}_1\le C_M$. Weighted Cauchy--Schwarz in the convolution
+and separation bound the sum of the resulting decay kernels by a
+constant, and by $Cn^{1-M}$ outside $K_1$.
+If analytic polynomials $P_n$ are bounded in $H^2$, have degree
+$O(n)$ and converge strongly locally in $L^2$, their step samples
+therefore converge strongly locally to the same limit: subtract a
+fixed polynomial approximation to the weak $H^2$ limit in
+\eqref{sampling}, let $n$ increase and then improve the approximation.
+Apply this to $(1-z^2)b_n$ and divide by $1-e^{2i\theta}$ on interior
+arcs. On both the reference and new grids the samples of $b_n$
+converge strongly locally to $F$. In particular, with
+$c=\cos\delta$, $p=\sin\delta$,
+\begin{equation}\label{sample-identification}
+ \operatorname{Step}_Y\frac{|Q_n'(y_i)|}{n}\longrightarrow\frac{|F|}{s},
+ \quad \operatorname{Step}_X(\epsilon_iQ_n(x_i))\longrightarrow|F|p,
+ \quad \operatorname{Step}_X\frac{\epsilon_iQ_n'(x_i)}n
+ \longrightarrow\frac{|F|c}{s}.
+\end{equation}
+The first formula uses \eqref{boundary-pair} at a zero; the other
+two use the reference root phase in \eqref{unwrapped}.
+
+\begin{proposition}\label{inverse}
+Put $f=2^{-1/2}|F(e^{i\arccos x})|^2$,
+$T=g^{1/2}Hg^{-1/2}$ and $T_f=f^{1/2}Hf^{-1/2}$.
+The operators $D_nA_n^{-1}$ converge weakly to a unique bounded
+operator $B$. The product $L=T_fD$ has a bounded extension, and
+\begin{equation}\label{channels}
+ B=cD+pL,\qquad TB=cL-pD.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The finite algebra gives
+$\norm{A_nD_nh}^2+\norm{A_n^{-*}D_nh}^2
+ =2\norm{D_nh}^2+\norm{U_n^*D_nh}^2$.
+Thus $A_nD_n$ and $D_nA_n^{-1}$ are uniformly bounded.
+For $h\in C_c^\infty(I)$ the cardinal formula gives exactly
+\begin{equation}\label{exact-inverse}
+ \sum_j\ell_j^Y(x)\frac{Q_n'(y_j)}n h(y_j)
+ =\frac{Q_n'(x)}n h(x)
+ -\frac{Q_n(x)}n\sum_j\frac{h(x)-h(y_j)}{x-y_j}.
+\end{equation}
+The divided difference is continuous on the closed square.
+Equidistribution implies uniform convergence of its normalized sum
+on compact sets to $-H(h/s)$; the Hilbert transform of the arcsine
+density vanishes in $I$.
+Give the new grid the raw vector
+$d_{j,n}=\sqrt{\pi/n}\,Q_n'(y_j)h(y_j)/n$.
+In the physical embedding it tends strongly to
+$k_h=|F|h/s^{3/2}$, by \eqref{sample-identification}.
+Sampling \eqref{exact-inverse} at the old nodes and multiplying by
+$D_n$ gives locally strongly
+\begin{equation}\label{B-core}
+ Bk_h=\sqrt\pi\,|F|\{ch/s+pH(h/s)\}.
+\end{equation}
+This is a global $L^2$ function: $H(h/s)$ is bounded near the
+endpoints and $\int|F|^2dx\le C$ by the weighted amplitude bound.
+The span of $k_h$ is dense in $L^2$ since its multiplying function
+is positive almost everywhere and locally square integrable.
+Uniform boundedness identifies all weak operator subsequential
+limits on this dense family, proving uniqueness and convergence.
+
+The second identity needs an endpoint check. Define on
+$\mathbb C\setminus[-1,1]$
+$\mathcal R(z)=F(w(z))/(1-w(z)^2)^{1/4}$.
+Its upper boundary value is $r e^{-i\delta}$, where
+$r=\sqrt{f/g}$, and $\mathcal R(\infty)=1$.
+Multiply $\mathcal R$ by the Cauchy transform of $h/s$.
+Its real and imaginary boundary parts are
+$r[cH(h/s)-ph/s]$ and $-r[ch/s+pH(h/s)]$.
+There is no endpoint residue: from $(1-z^2)F\in H^2$, the integral
+on a physical circle of radius $\varepsilon$ at either endpoint is
+bounded by $C\varepsilon^{1/8}\int_{-\pi}^{\pi}
+ |\cos(t/2)|^{-1/2}\dd t=o(1)$.
+The compactly supported Cauchy datum is bounded there, and the
+product decays at infinity. Cauchy's formula therefore gives
+\begin{equation}\label{TB-core}
+ TBk_h=\sqrt\pi\,|F|\{cH(h/s)-ph/s\}.
+\end{equation}
+The fixed transform $T$ is bounded: its power exponents are within
+the $A_2$ range. Rotating \eqref{B-core} and \eqref{TB-core} yields
+$cB-pTB=D$ and $pB+cTB=T_fD$ on the dense family. The latter
+defines the bounded extension $L$, and rotating back proves
+\eqref{channels}. Only the product $T_fD$ is asserted bounded.
+\end{proof}
+
+\section{The global limiting comparison}
+
+Define $T_0=g^{-1/2}Hg^{1/2}=-T^*$ and
+$A=c-pT_0=c+pT^*$. These are bounded operators since the fixed
+power weights belong to $A_2$. The reference limit is
+\begin{equation}\label{R-limit}
+ R_n\longrightarrow R=\tfrac12D(I-T^*T)D
+ \quad\hbox{in }\mathcal S_1,
+ \qquad K:=TD=\sqrt\pi\,g^{1/2}Hg^{1/2},\quad K^*=-K.
+\end{equation}
+Here and in what follows finite matrices are embedded as specified
+above. We give the global convergence details, because trace
+convergence on compact interior squares alone would be insufficient.
+
+In \eqref{factorization} let $v_n(\zeta)$ be the embedded, sign-modulated
+vector $-\sqrt{C_m}\psi(\zeta)$. This sign makes the interior nodal
+derivatives agree with the positive leading coefficient of $Q_n$.
+Root derivative asymptotics give
+$v_n(\zeta)\to v(\zeta)=s^{\alpha-1}/(\zeta-x)$ strongly, for each fixed $\zeta>1$.
+The endpoint tails follow from
+$|v_{n,i}(\zeta)|^2\le Cn^{-1}s_i^{2\alpha-1}/(\zeta-x_i)^2$ and the
+reference separation. Also
+$nJ_m(\zeta)/C_m\to1/(2\sqrt{\zeta^2-1})$ by the interior oscillatory
+average of $na^\alpha P^2/C_m$ and its integrable endpoint bound.
+Uniformly in $n$,
+$\norm{v_n(\zeta)}^2\le C(\zeta-1)^{\alpha-2}$ for $1<\zeta<2$ and
+$\norm{v_n(\zeta)}^2\le C\zeta^{-2}$ for $\zeta\ge2$.
+The first bound follows by splitting the angular sum at
+$\theta\asymp\sqrt{\zeta-1}$, with the first angular point at $c'/n$.
+Thus the trace norm of the factorization integrand is bounded by
+$C(\zeta-1)^{-1/2}$ near $1$ and $C\zeta^{2\beta-2}$ at infinity.
+Rank-one convergence and dominated convergence in $\mathcal S_1$
+prove the first assertion of \eqref{R-limit}.
+
+For identification, put $V_\beta(x)=\PV\int a(t)^\beta/(x-t)\dd t$.
+Its Pearson equation, or the odd power series at zero, gives
+$V_\beta(x)=\cos(\pi\beta)\int_1^\infty(\zeta^2-1)^\beta
+ [(\zeta-x)^{-1}-(\zeta+x)^{-1}]\dd \zeta$.
+The limiting kernel from \eqref{factorization} is therefore
+\begin{equation}\label{R-kernel}
+ R(x,y)=\frac{g(x)^{1/2}g(y)^{1/2}}{2\pi}
+ \frac{V_{1/4}(x)-V_{1/4}(y)}{x-y}.
+\end{equation}
+The finite Hilbert-transform identity
+$HM_hH+M_h=[M_{Hh},H]$, with zero extension and initially smooth
+compact data, identifies this kernel with
+$\tfrac12D(I-T^*T)D$. Extension by boundedness gives
+\eqref{R-limit}; in particular $R=\tfrac12(D^2+K^2)$.
+
+We also have the weighted convergences
+\begin{equation}\label{weighted-R-limit}
+ D_n^{-1}R_n\to D^{-1}R\quad\hbox{in }\HS,
+ \qquad D_n^{-1}R_nD_n^{-1}\to\tfrac12(I-T^*T)
+ \quad\hbox{strongly}.
+\end{equation}
+To verify the endpoint assertions, \eqref{entry-bound} and $2k>1$
+give $\sum_j|R_{n,ij}|^2\le Cs_i/n$.
+For the projection $P_\varepsilon$ onto old coordinates with
+$s_i\le\varepsilon$, it follows that
+$\norm{P_\varepsilon D_n^{-1}R_n}_{\HS}^2\le C(\varepsilon+n^{-1})$.
+For the other orientation use
+$R_nW_n^{-1}R_n\le\rho R_n$ and $R_{n,ii}\le C/n$ to obtain
+$\norm{D_n^{-1}R_nP_\varepsilon}_{\HS}^2\le C(\varepsilon+n^{-1})$.
+Interior kernel convergence proves the first statement of
+\eqref{weighted-R-limit}. For the second, test first on compactly
+supported functions, control the output tails by the preceding
+estimates, and use $0\le D_n^{-1}R_nD_n^{-1}\le\rho I$ and density.
+These arguments also give $RD^{-1}\in\HS$.
+
+The weighted forward maps satisfy
+\begin{equation}\label{forward}
+ A_nD_n\longrightarrow AD\quad\hbox{strongly}.
+\end{equation}
+Here is a dense-family proof which also controls their endpoint rows.
+The vectors $\xi_n(\zeta)=D_n^{-1}v_n(\zeta)$ converge strongly to
+$\xi(\zeta)=s^{-1/4}/[\sqrt\pi(\zeta-x)]$.
+Indeed their discrete squared coordinates are exactly
+$n^{-1}a_i^{\alpha-1}/(\zeta-x_i)^2$; separation controls the tails.
+The span of $\xi(\zeta)$, $\zeta>1$, is dense, since expansion in $\zeta^{-1}$
+reduces orthogonality to all polynomial moments against the positive
+multiplier $s^{-1/4}$.
+Substitute the common-phase expansions of $P,F_m$ in the exact
+interpolant \eqref{exterior-mode}. Lemma~\ref{boundary-compactness}
+then gives $A_nv_n(\zeta)\to Av(\zeta)$ locally strongly; its two terms
+are $v(\zeta)c$ and $-pT_0v(\zeta)$, by partial fractions in $G_{\alpha-1}$.
+This calculation is valid for unbounded displacement values:
+the error from replacing $(N/n)\delta_{i,n}$ by $\delta_{i,n}$
+has local mean square tending to zero, since the latter step
+functions converge locally in $L^2$.
+For each fixed $\zeta>1$, \eqref{exterior-mode} and
+\eqref{PF-bounds} give
+$\sup_y|q_\zeta(y)|\le C_\zeta n^{-1/2}$.
+Each endpoint row thus has squared magnitude at most $C_\zeta/n$;
+equidistribution bounds the number of rows in an angular strip
+of width $\varepsilon$ by $O(n\varepsilon)+o(n)$.
+This upgrades the vector convergence to global strong convergence.
+Uniform boundedness of $A_nD_n$, proved in
+Proposition~\ref{inverse}, and density prove \eqref{forward}.
+
+Consequently the weak Hilbert--Schmidt limit of $V_n$ is
+$V=DA^*-B$, and the positive term in \eqref{finite-comparison} obeys
+\begin{equation}\label{positive-liminf}
+ \liminf_n\tr(\mathcal M_nU_nU_n^*)
+ \ge\tfrac12(\norm V_{\HS}^2+\norm{TV}_{\HS}^2).
+\end{equation}
+In fact $V_n=(A_nD_n)^*-D_nA_n^{-1}$ is bounded in $\HS$,
+and its matrix coefficients are identified by \eqref{forward} and
+Proposition~\ref{inverse}. The left side is
+$\norm{(I-D_n^{-1}R_nD_n^{-1})^{1/2}V_n}_{\HS}^2$;
+strong convergence of the positive square roots and weak lower
+semicontinuity prove \eqref{positive-liminf}. Thus no endpoint
+concentration has been removed from this term.
+
+The compact trace has an actual limit:
+\begin{equation}\label{compact-trace}
+ \tr(R_nJ_n)\longrightarrow\tr\{R(A^*A-I)\}.
+\end{equation}
+On a compact exterior-parameter interval this follows from the
+strong vector convergence just proved in \eqref{factorization}.
+Its sampled parameter tails are uniformly negligible. To check this,
+split new rows into a fixed interior interval and its complement.
+For interior rows \eqref{exterior-mode} gives
+$|q_{\pm \zeta}(y)|\le C_\varepsilon/(\sqrt n\,\zeta)$, $\zeta\ge1$;
+the resulting scalar majorant is
+$C_\varepsilon(\zeta^2-1)^\beta/\zeta^2$, integrable at both ends.
+For each other row the whole factorization contributes at most
+$C/n$ by \eqref{row-bounds}; their total limiting contribution is
+$O(\varepsilon)$ by equidistribution. First remove the parameter
+tails with $\varepsilon$ fixed and then let $\varepsilon\downarrow0$.
+The old trace tails have their independent trace-norm majorant.
+This proves \eqref{compact-trace} without a bound for $A_n$ itself.
+
+We next identify the signed trace, keeping its real linear term.
+Define
+\begin{equation}\label{signed-functionals}
+ \mathfrak a(\delta)=\int_0^\pi\cos\theta\,\delta(\theta)\dd\theta,
+ \quad Z(\delta)=\frac1\pi\int_0^\pi
+ [\pi(1-2\alpha)x\sin\delta\cos\delta
+ -s^{3-2\alpha}V_\alpha'(x)\sin^2\delta]\dd\theta,
+ \quad \alpha=5/4.
+\end{equation}
+The coefficients in $Z$ are bounded, including the endpoints.
+We claim
+\begin{equation}\label{signed-limit}
+ \limsup_n\tr(W_nJ_n)\le\mathfrak a(\delta)+Z(\delta).
+\end{equation}
+Put $W_{0,n}=\diag(\pi s_i)$ and
+$Z_n(y)=n[\sum_i\pi s_i\ell_i^0(y)^2-\pi s(y)]$.
+The first bound in \eqref{row-bounds} gives $\sup|Z_n|\le C$.
+On every compact interior interval \eqref{weighted-row-exact}
+and the common-phase expansions give
+$Z_n(\cos\theta)=\mathcal Z(x,e^{2id_n(\theta)})+o(1)$, where
+\begin{equation}\label{Z-kernel}
+ \mathcal Z(x,z)=\tfrac\pi2(1-2\alpha)x\operatorname{Im}z
+ -\tfrac12s^{3-2\alpha}V_\alpha'(x)(1-\operatorname{Re}z),
+ \qquad d_n(\theta)=N\theta-\tfrac\pi2(\alpha-1/2).
+\end{equation}
+For example $nPF_m/C_m=\sin d_n\cos d_n/s+O_K(n^{-1})$.
+Also $nP^2/C_m=\sin^2d_n/(\pi s^{2\alpha+1})+O_K(n^{-1})$;
+the Gaussian error term tends to zero uniformly in the interior.
+At new nodes Lemma~\ref{boundary-compactness} gives
+$e^{2id_n(\phi_i)}\to e^{2i\delta}$ in step $L^2$.
+Since $Z_n$ is uniformly bounded and the endpoint row proportion
+tends to zero with the strip width, it follows that
+$n^{-1}\sum_iZ_n(y_i)\to Z(\delta)$.
+
+Replacing $W_{0,n}$ by $W_n$ costs $o(1)$ in this trace, not just
+$O(1)$. To see the needed precision set
+$e_i=W_i-(n/N)\pi s_i$. By \eqref{weight-precision},
+$|e_i|\le C/n$ globally and $|e_i|\le C_K/n^2$ in the interior.
+The row sum $\sum_i e_i\ell_i^0(y)^2$ is $O(1/n)$ globally.
+For interior $y$, split old columns into a larger interior interval
+and its complement; the former contributes $O_K(n^{-2})$.
+The latter does too, since the cardinal quotient and
+$\sum_i|q'(x_i)|^{-2}=O(1)$ give an exterior column square sum
+$O_K(n^{-1})$. The same endpoint split as above proves
+$\sum_{\rm new}\sum_i e_i\ell_i^0(y_j)^2=o(1)$ and
+$\sum_{\rm old}e_i=o(1)$.
+Finally $\tr(W_{0,n}J_n)=O(1)$ by \eqref{finite-bounds} and
+\eqref{row-bounds}, and $n/N=1+O(1/n)$. We have proved
+\begin{equation}\label{signed-split}
+ \tr(W_nJ_n)=\pi\left[\sum_i s(y_i)-\sum_i s(x_i)\right]
+ +n^{-1}\sum_i Z_n(y_i)+o(1).
+\end{equation}
+
+For the remaining linear moment let $Q_n^0$ have the reference
+zeros and the same leading coefficient as $Q_n$, and put
+$\mathcal R_n=Q_n/Q_n^0$. An exact Stieltjes integral, followed by
+integration by parts, gives
+\begin{equation}\label{transport}
+ \pi\left[\sum_i s(y_i)-\sum_i s(x_i)\right]
+ =\int_0^\infty\log|\mathcal R_n(\sqrt{1+t^2})
+                            \mathcal R_n(-\sqrt{1+t^2})|\dd t.
+\end{equation}
+Indeed insert
+$a^{1/2}=\pi^{-1}\int_0^\infty u^{-1/2}a/(a+u)\dd u$;
+the equal node counts cancel its constant term, and the logarithmic
+derivative of the product supplies the remaining resolvents.
+At the lower endpoint the boundary term is
+$\sqrt{c^2-1}\log|\mathcal R_n(c)\mathcal R_n(-c)|\to0$;
+at infinity the odd Laurent coefficients cancel.
+
+Only an upper bound on the positive endpoint tail of the integrand
+is needed. Write $\Delta=\sqrt{c^2-1}$ and $\varphi=c+\Delta$.
+The Legendre integral representation and \eqref{Q-bounds} give
+$|Q_n(c)|+|Q_n(-c)|\le C\varphi^n\min(n,\Delta^{-1})$
+for $1<c\le2$. The reference has the lower bound
+$|Q_n^0(c)|\ge c_\alpha\varphi^n
+ \Delta^2/(\Delta+n^{-1})^{2-\beta}$.
+For a direct verification of this last bound, write
+$Q_n^0=2m!(x^2-1)C_m^{\alpha+1/2}(x)/(\alpha+1/2)_m$
+and use its nonnegative coefficient expansion in
+$r=\varphi^{-2}$. Restrict the convolution sum to
+$j\le\min(m/2,c/(1-r))$. The coefficient ratio is bounded below,
+and the partial binomial sum is at least
+$c\min(m,(1-r)^{-1})^{\alpha+1/2}$, which is the asserted bound.
+Consequently, for
+$h_n(c)=\log|\mathcal R_n(c)\mathcal R_n(-c)|$,
+\begin{align*}
+ [h_n(c)]_+&\le C+2(1+\beta)\log(1/\Delta)
+       &&(n^{-1}\le\Delta\le1),\\
+ [h_n(c)]_+&\le C+2(1+\beta)\log n
+                  +4\log(1/(n\Delta))&&(0<\Delta<n^{-1}).
+\end{align*}
+Since $c\,dc/\Delta=d\Delta$, the limiting positive tail on
+$0<t<\varepsilon$ is at most
+$C\varepsilon(1+|\log\varepsilon|)$.
+At infinity $|h_n(c)|\le C/c^2$ uniformly: the normalized analytic
+polynomials $F_n$ are bounded and zero-free on a fixed small disk,
+and the sum of their logarithms at $w$ and $-w$ has vanishing linear
+term. Local uniform convergence, reverse Fatou with the preceding
+positive majorants, and \eqref{transport} yield
+\begin{equation}\label{transport-upper}
+ \limsup_n\pi\left[\sum_i s(y_i)-\sum_i s(x_i)\right]
+ \le\int_0^\infty\log|\mathcal R(\sqrt{1+t^2})
+                              \mathcal R(-\sqrt{1+t^2})|\dd t.
+\end{equation}
+The normalized logarithm has the Cauchy representation
+$\log\mathcal R(z)=\pi^{-1}\int\delta(x)/(z-x)\dd x$.
+This follows from its upper boundary imaginary part $-\delta$;
+the endpoint circles vanish because $\log F\in H^p$, $p>1$,
+and the value at infinity is zero.
+The integral in \eqref{transport-upper} is therefore exactly
+$\int x\delta(x)/s(x)\dd x=\mathfrak a(\delta)$:
+the inner $t$ integral of
+$\pi^{-1}[(\sqrt{1+t^2}-x)^{-1}-(\sqrt{1+t^2}+x)^{-1}]$
+is $x/s(x)$. Fubini is absolute since $\delta$ is in angular $L^1$.
+Together with \eqref{signed-split} this proves \eqref{signed-limit}.
+
+Combining \eqref{finite-comparison}, \eqref{positive-liminf},
+\eqref{compact-trace} and \eqref{signed-limit} proves the fully
+global reduction
+\begin{equation}\label{global-reduction}
+ \begin{gathered}
+ \liminf_n n(I_n(Y_n)-I_n(X_n))\ge\mathcal E(F),\qquad
+ \\
+ \mathcal E(F)=-\mathfrak a(\delta)-Z(\delta)
+ +\tr\{R(A^*A-I)\}
+ +\tfrac12(\norm V_{\HS}^2+\norm{TV}_{\HS}^2).
+ \end{gathered}
+\end{equation}
+Every term here is finite. Possible negative endpoint concentration
+in \eqref{transport} improves the inequality; positive concentration
+in \eqref{positive-liminf} has been retained.
+
+\section{The fractional comparison identity}
+
+We first prove finiteness of the nonlinear integral; it is not an
+assumption in the approximation argument.
+
+\begin{lemma}\label{finite-defect}
+For the limit supplied above, $L-K\in\HS$ and
+$\mathcal D[f]=\tfrac14\norm{L+L^*}_{\HS}^2<\infty$.
+\end{lemma}
+
+\begin{proof}
+The fixed operator $E_0=DT-K=[D,K]D^{-1}$ is Hilbert--Schmidt.
+Its kernel is
+$\pi^{-1/2}\sqrt{g(x)/g(y)}[g(x)-g(y)]/(x-y)$.
+To check the endpoints put $u=1-x$, $v=1-y$ and $q=1/4$.
+On $u\le v/2$ its square is bounded by $Cu^qv^{q-2}$; in the
+opposite orientation it is bounded by $Cu^{3q-2}v^{-q}$.
+Integration reduces both to $C\int_0^1t^{2q-1}dt<\infty$.
+Comparable distances use the mean value theorem and give the same
+radial integral. Opposite endpoints have a bounded denominator
+and integrable power factors.
+
+By \eqref{channels}, $V=DTp-pL$ and $KT=2RD^{-1}-D$.
+Therefore the two operators
+\begin{equation}\label{two-defects}
+ Kp-pL=V-E_0p,\qquad
+ Kc-cL=TV-2RD^{-1}p
+\end{equation}
+are Hilbert--Schmidt. Set $r=\sqrt{f/g}$. On separated compact
+rectangles the kernel of $L$ is $r(x)K(x,y)/r(y)$ by its defining
+formula in Proposition~\ref{inverse}. The squared kernels of the
+two operators in \eqref{two-defects} add to
+\begin{equation}\label{kernel-lower}
+ |K(x,y)|^2[1+t^2-2t\cos(\delta(x)-\delta(y))]
+ \ge |K(x,y)|^2(t-1)^2,\qquad t=r(x)/r(y)>0.
+\end{equation}
+A countable union of separated rectangles covers the complement
+of the diagonal. Hence the difference kernel
+$K(x,y)(r(x)/r(y)-1)$ is square integrable globally.
+It equals $L-K$ as an operator: on compact intervals the local
+$A_2$ realization makes the truncated Hilbert formulas converge
+on the dense data family of Proposition~\ref{inverse}; their
+difference kernels converge in Hilbert--Schmidt norm. The two
+limits agree there, and then globally by exhaustion and boundedness.
+This also rules out a remaining diagonal multiplication operator.
+Since $K^*=-K$, the symmetric part of $L$ has kernel
+$[f(x)g(y)-g(x)f(y)]/[\sqrt\pi\sqrt{f(x)f(y)}(x-y)]$.
+Its squared Hilbert--Schmidt norm is exactly $4\mathcal D[f]$.
+\end{proof}
+
+For the approximation define
+\begin{equation}\label{X-space}
+ \norm h_X^2=\int\frac{|h|^2}{s}\dd x+\mathfrak e(h),\qquad
+ \mathfrak e(h)=\iint_{I^2}
+ \frac{g(x)g(y)|h(x)-h(y)|^2}{(x-y)^2}\dd x\dd y.
+\end{equation}
+We use $h(\cos\theta)$ as an even circular function and write $Jh$
+for its odd circular conjugate, restricted to the upper semicircle.
+Then $Jh=-sH(h/s)$ and $H(Jh)=h-\fint_0^\pi h(\cos\theta)d\theta$.
+These identities follow on Chebyshev polynomials from
+$JT_k=sU_{k-1}$ and $H(sU_{k-1})=T_k$, and then by density.
+
+\begin{lemma}\label{weighted-approximation}
+Both $J$ and $H$ are bounded on $X$. If $h$ is in angular $L^2$ and
+the kernel $Q_h(x,y)=K(x,y)(e^{h(x)-h(y)}-1)$ is Hilbert--Schmidt,
+there are real $h_j\in C_c^\infty(I)$ such that
+$h_j\to h$ in $X$ and $Q_{h_j}\to Q_h$ in $\HS$.
+\end{lemma}
+
+\begin{proof}
+Set $x=\tanh t$ and $a_0(t)=\cosh(t)^{-1/2}$.
+Since $d\theta=a_0(t)^2dt$, direct substitution gives
+\begin{equation}\label{hyperbolic}
+ \mathfrak e(h)=\iint_{\R^2}
+ \frac{a_0(t)a_0(u)|h(t)-h(u)|^2}{\sinh^2(t-u)}\dd t\dd u,
+ \qquad \norm h_X\asymp\norm{a_0h}_{H^{1/2}(\R)}.
+\end{equation}
+Here is a verification of the equivalence. For $v=a_0h$, expansion
+of the square gives the translation-invariant $1/\sinh^2$ form of
+$v$, plus $2\int |v(t)|^2 b(t)dt$, where
+$b(t)=\PV\int[a_0(u)/a_0(t)-1]/\sinh^2(t-u)\dd u$.
+The function $b$ is bounded: subtract the odd linear Taylor term
+near $u=t$, and use $a_0(u)/a_0(t)\le e^{|u-t|/2}$ on the tails.
+The reverse expansion has the same bound. The translation-invariant
+form plus $L^2$ is equivalent to $H^{1/2}$ because its kernel is
+comparable to $|t-u|^{-2}$ near zero and has integrable tails.
+
+The convolution operator $\mathscr H$ with principal-value kernel
+$1/(\pi\sinh t)$ is bounded on $H^{1/2}(\R)$, since its Fourier
+multiplier is $-i\tanh(\pi\xi/2)$.
+The exact transformed formulas are
+$J=-\mathscr H$ and $H=a_0^{-2}\mathscr H a_0^2$.
+After the isometry $h\mapsto a_0h$, they become
+$-a_0\mathscr H a_0^{-1}$ and $a_0^{-1}\mathscr H a_0$.
+Their differences from $\mp\mathscr H$ have kernels
+$\pi^{-1}[a_0(t)/a_0(u)-1]/\sinh(t-u)$, or the inverse ratio.
+These kernels and their first output derivatives have uniform
+integrable Schur envelopes. At the diagonal the linear zero
+removes the singularity, including after differentiation by
+cancellation of the leading terms; on the tails the bound is
+$Ce^{-|t-u|/2}$. Thus the differences map $L^2$ into $H^1$.
+This proves the asserted bounds on $X$ by \eqref{hyperbolic}.
+
+Symmetry and
+$z^2\le C[(e^z-1)^2+(e^{-z}-1)^2]$ give
+$\mathfrak e(h)\le C\norm{Q_h}_{\HS}^2$.
+Clip $h$ at $\pm N$. Clipping preserves the sign and decreases
+the magnitude of every difference, so
+$|e^{h_N(x)-h_N(y)}-1|\le|e^{h(x)-h(y)}-1|$.
+Dominated convergence gives both $Q_{h_N}\to Q_h$ in $\HS$ and
+$h_N\to h$ in $X$.
+For fixed $N$, multiply by a smooth hyperbolic cutoff $\chi_R$
+equal to one on $[-R,R]$ and zero outside $[-R-1,R+1]$.
+The capacity estimate
+$\mathfrak e(1-\chi_R)+\norm{1-\chi_R}_{L^2(d\theta)}^2
+ \le Ce^{-R}$ follows from \eqref{hyperbolic}, since
+$a_0(1-\chi_R)$ and its derivative have squared $L^2$ norms
+$O(e^{-R})$. In the difference of $(1-\chi_R)h_N$, the part
+containing $h_N(x)-h_N(y)$ is a vanishing tail of its finite
+energy; the other part is bounded by $N^2\mathfrak e(\chi_R)$.
+Thus these cutoffs converge in $X$. Their uniform boundedness makes
+the exponential Lipschitz on the relevant difference range and
+gives convergence of $Q$ in $\HS$ as well.
+Ordinary interior mollification preserves the bound and converges
+in $H^{1/2}$ on compact sets, hence in $X$ and in $Q$.
+A diagonal choice proves the lemma.
+\end{proof}
+
+We now evaluate the finite expression \eqref{global-reduction}.
+First suppose $\delta\in C_c^\infty(I)$ is real, put
+$\eta=H\delta$, $r=e^\eta$ and $f=gr^2$.
+All ratios $f/g$ are smooth and positive on the closed interval.
+The normalized Cauchy factor
+$\mathcal R(z)=\exp\{\pi^{-1}\int\delta(t)/(z-t)\dd t\}$ has
+boundary value $r e^{-i\delta}$. Its inverse times a Cauchy datum
+gives, by Plemelj's formula,
+$HM_{r^{-1}}(c-pH)=M_{r^{-1}}(p+cH)$.
+Consequently, if $A_g=c-pT$ and $C_g=p+cT$, then
+\begin{equation}\label{smooth-inverse}
+ C_g=T_fA_g,\qquad A_g^{-1}=c+pT_f,\qquad
+ A_gD=DA,\qquad DA^{-1}=A_g^{-1}D.
+\end{equation}
+For the inverse assertion, $cA_g+pC_g=I$ gives a left inverse.
+Both $A_g$ and $A$ are Fredholm of index zero: extended by the
+identity outside $I$, they differ by trace-class operators from
+$c-pH_{\R}$, whose parametrix is $c+pH_{\R}$ modulo smooth
+Hilbert-transform commutators. This applies along the homotopy
+$t\delta$, starting from the identity. Thus the left inverse of
+$A_g$ is its inverse. The bounded identity $A_gD=DA$ then proves
+injectivity of $A$, and index zero proves its invertibility.
+No unbounded similarity by $D^{-1}$ has been used.
+
+Here are the trace details, including the trace of a commutator
+which cannot be suppressed. Let $U=A^*-A^{-1}$, $J=A^*A-I$,
+$\mathsf V=A^{-1}$, $\mathsf F=\mathsf V\mathsf V^*-I$ and
+$\mathsf M=D^2-R$. All the differences whose traces occur below
+are trace class. This can be checked by expanding the smooth
+divided-difference kernels in a Fourier basis: two derivatives in
+the compact row or column variable make the sum of rank-one
+trace norms finite. The separated endpoint pieces have square
+integrable power factors. In particular
+$\mathsf V=c+pH_{\R}+\mathcal S_1$.
+For $k=a^{1-\alpha}$ the diagonal calculation for $J$, using
+$HM_hH+M_h=[M_{Hh},H]$, gives
+\begin{equation}\label{trace-J}
+ \tr(D^2J)=\int(1-2\alpha)\frac{x}{s}cp\dd x
+ -\frac1\pi\int k p^2V_\alpha'\dd x=Z(\delta).
+\end{equation}
+For precision, the cross-term diagonal is
+$-[(cp)'+(k'/k)cp]/\pi$ and the quadratic-term diagonal is
+$-(H(kp^2))'/(\pi k)$. Integration by parts against $\pi s$
+and the self-adjointness of $|D|$ give \eqref{trace-J}.
+Since $UU^*=J+\mathsf F$, \eqref{global-reduction} becomes
+$\mathcal E=\tr(\mathsf M\mathsf F)-\mathfrak a(\delta)$.
+
+The required correction is
+\begin{equation}\label{trace-correction}
+ \tr(\mathsf V^*\mathsf M\mathsf V-\mathsf M)
+ -\tr\{\mathsf M(\mathsf V\mathsf V^*-I)\}
+ =-\mathfrak a(\delta).
+\end{equation}
+Indeed the difference is the trace of
+$[\mathsf V^*,\mathsf M\mathsf V]$.
+The trace-class corrections $R$ and
+$\mathsf V-(c+pH_{\R})$ change this trace only by commutators
+having a trace-class factor, whose traces vanish.
+Write $W=\pi s$ and extend it smoothly to the line near the compact
+phase support. The change outside that support contributes a
+trace-class separated kernel with zero diagonal and zero trace.
+For $[c-H_{\R}p,W(c+pH_{\R})]$ the cross-term diagonal integrates to
+\begin{equation*}
+ \frac1\pi\int[Wp c'+(Wc)'p]\dd x
+ =-\frac1\pi\int W\delta'\dd x=-\mathfrak a(\delta).
+\end{equation*}
+The quadratic term is
+$Q=-H_{\R}(Wp^2)H_{\R}-Wp^2$.
+It is trace class and anticommutes with $H_{\R}$; conjugation by
+the invertible $H_{\R}$ changes $Q$ to $-Q$, so $\tr Q=0$.
+This proves \eqref{trace-correction} by actual traces of
+differences, rather than cyclically rearranging divergent traces.
+It follows that
+$\mathcal E=\tr(\mathsf V^*\mathsf M\mathsf V-\mathsf M)$.
+
+The identities
+$A_g^*A_g+C_g^*C_g=I+T^*T$ and \eqref{smooth-inverse} now imply
+\begin{equation}\label{smooth-energy}
+ \mathcal E=\tfrac12\tr\{D(T_f^*T_f-T^*T)D\}
+ =\mathcal C[g]-\mathcal C[f],\qquad
+ \mathcal C[h]=\tfrac12\int\frac{s}{h}|D|h\dd x.
+\end{equation}
+To verify the last equality without an infinite trace subtraction,
+the kernel identity above gives
+$\mathcal C[h]=\tfrac12\tr\{D(I-T_h^*T_h)D\}$.
+For $h=g$ this is the trace of $R$. For $h=f$, the difference
+$T_f-T$ has a smooth divided-difference kernel times square
+integrable endpoint powers, hence is trace class by the same
+separated expansion. The diagonal of the resulting difference is
+$s|D|h/h$. Endpoint cutoff limits are justified by the power $1/4$.
+
+The fractional ground-state identity evaluates \eqref{smooth-energy}
+explicitly. Direct symmetrization of
+$|D|h(x)=\pi^{-1}\PV\int_{\R}[h(x)-h(y)]/(x-y)^2\dd y$ gives
+\begin{equation}\label{ground-state}
+ \mathcal C[g]-\mathcal C[f]
+ =\frac1{4\pi}\iint_{I^2}
+ \frac{[g(x)f(y)-g(y)f(x)]^2}{f(x)f(y)(x-y)^2}\dd x\dd y
+ =\tfrac14\norm{L+L^*}_{\HS}^2.
+\end{equation}
+In fact the contribution of $\R\setminus I$ to each $\mathcal C[h]$
+is $\pi^{-1}\int s^{-1}=1$, so those contributions cancel.
+The remaining numerator is
+$s(x)f(y)/f(x)+s(y)f(x)/f(y)-2g(x)g(y)$.
+All integrals are finite for a smooth positive ratio $f/g$.
+This is the usual quadratic fractional ground-state representation,
+also commonly expressed as a Picone identity; see \cite{frank}.
+Its elementary expansion here fixes its normalization.
+For an independent evaluation of the constant,
+$\mathcal C[g]=\tfrac12\langle g,|D|g\rangle$ and
+$\widehat g(t)=\sqrt\pi\Gamma(5/4)(2/|t|)^{3/4}J_{3/4}(|t|)$,
+with $\widehat h(t)=\int e^{-itx}h(x)dx$.
+The beta-integral expansion of the exponential proves this transform.
+The Weber--Schafheitlin formula \cite[10.22.57]{dlmf} gives
+$\int_0^\infty t^{-1/2}J_{3/4}(t)^2dt
+ =\sqrt2/\Gamma(3/4)^2$.
+Its convergence conditions hold both at zero and infinity.
+Plancherel therefore gives
+$\mathcal C[g]=2\Gamma(5/4)^2/\Gamma(3/4)^2=\Cstar$,
+in agreement with Proposition~\ref{construction}.
+
+Finally return to the possibly rough limit $F$.
+Set $\eta=\log r$, so $\eta$ and $\delta$ are the real and imaginary
+parts of $\log[F(z)/(1-z^2)^{1/4}]$ and $\delta=J\eta$.
+They are in every finite angular $L^p$.
+Lemma~\ref{finite-defect} supplies the nonlinear kernel hypothesis
+of Lemma~\ref{weighted-approximation}. Choose its approximants
+$\eta_j$ and put $\delta_j=J\eta_j$, $L_j=K+Q_{\eta_j}$,
+$p_j=\sin\delta_j$, $c_j=\cos\delta_j$.
+Bounded conjugation gives $\delta_j\to\delta$ in $X$.
+The sine and cosine compositions also converge in $X$: their
+fractional differences have uniformly integrable squares by strong
+$X$ convergence, and their Lipschitz constants are at most one.
+Thus $[K,p_j]\to[K,p]$ in $\HS$, and likewise for $c_j$.
+The identity
+$V=E_0p+[K,p]-p(L-K)$ shows that $V_j\to V$ and $TV_j\to TV$
+in $\HS$. Multiplication by $c_j,p_j$ converges strongly,
+as do its adjoints, so $\tr\{R(A_j^*A_j-I)\}$ converges.
+The two signed integrals converge by angular $L^2$ convergence.
+Every term of the finite expression \eqref{global-reduction} is
+therefore continuous in this approximation, as is
+$\tfrac14\norm{L_j+L_j^*}_{\HS}^2$.
+
+For each fixed smooth compact modulus $\eta_j$, its conjugate has
+the form $\delta_j=s\psi_j$ with $\psi_j\in C^\infty([-1,1])$;
+this follows either from the Cauchy formula or its rapidly decreasing
+sine series. Cut this phase off in physical endpoint strips of
+width $\varepsilon$. The cutoff tends to $\delta_j$ in $X$ by
+the capacity estimate in Lemma~\ref{weighted-approximation}.
+Its finite Hilbert conjugate tends to
+$\eta_j-\fint\eta_j$ in $X$, and also uniformly with error
+$O_j(\sqrt\varepsilon)$. To check the uniform estimate, rescale
+$H[(1-\chi_\varepsilon)s\psi_j]$ at each endpoint: it is
+$\sqrt\varepsilon$ times the Hilbert transform of a uniformly
+bounded $C^{1/2}$ function with square-root vanishing at one end
+and smooth vanishing at the other. Subtracting its value in the
+principal value leaves the integrable kernel $C|u-v|^{-1/2}$;
+the boundary logarithm is bounded by the square-root factor.
+Uniform boundedness and the exponential Lipschitz estimate give
+convergence of the nonlinear Hilbert--Schmidt kernels as well.
+Hence the compact-phase calculation \eqref{ground-state} applies
+first to this cutoff, then to $(\eta_j,\delta_j)$, and finally,
+by the preceding operator continuity, to $(\eta,\delta)$.
+We have proved
+\begin{equation}\label{final-identity}
+ \mathcal E(F)=\mathcal D[f]=\tfrac14\norm{L+L^*}_{\HS}^2\ge0.
+\end{equation}
+Together with \eqref{global-reduction} this proves
+Theorem~\ref{comparison}.
+
+\begin{proof}[Proof of Theorem~\ref{main}]
+The upper comparison $M_n\le I_n(X_n)$ is
+Proposition~\ref{construction}. For the reverse asymptotic, a
+minimizer exists: in an orthonormal polynomial basis the objective
+is $\tr((E^*E)^{-1})$, which diverges when two nodes coalesce;
+compactness of the closed ordered node simplex then gives attainment.
+For large $n$ the minimum is less than $2$. The endpoint expansion
+in Lemma~\ref{coercivity} makes a minimizing array contain both
+endpoints. Apply Theorem~\ref{comparison} to these arrays to get
+$\liminf_n n(M_n-I_n(X_n))\ge0$. This and \eqref{cj} imply
+\eqref{answer}.
+\end{proof}
+
+\begin{corollary}\label{rigidity}
+If endpoint-containing arrays satisfy
+$n(I_n(Y_n)-I_n(X_n))\to0$, then their ordered angular displacement
+steps $n(\phi_i-\theta_i)$ tend to zero in every finite $L^p$ on
+compact interior intervals.
+\end{corollary}
+
+\begin{proof}
+Every extracted limit has $\mathcal D[f]=0$, so positivity of the
+kernel in \eqref{defect} gives $f/g$ constant almost everywhere.
+Outer normalization \eqref{outer} fixes
+$F=(1-z^2)^{1/4}$ and therefore $\delta=0$.
+Lemma~\ref{boundary-compactness} proves the assertion along every
+subsequence, which proves it for the full sequence.
+\end{proof}
+
+The supplementary directory \path{verification/} contains independent
+finite identity checks, the numerical reproduction programs and their
+outputs, and instructions for repeating them. In particular, they
+check the cardinal mass identity, the rank-one commutator, the
+exterior-resolvent factorization, \eqref{reciprocal},
+\eqref{exact-inverse}, and a global smooth-phase comparison.
+These calculations provide error-detection and reproducibility;
+none is a hypothesis or a substitute for an analytic limiting
+argument in the proof. The conclusion concerns the first-order
+asymptotic and the interior rigidity above, and does not determine
+the exact minimizing arrays for finite $n$.
+
+\begin{thebibliography}{99}
+\bibitem{erdos} P. Erd\H{o}s, Problems and results on the theory of
+interpolation. II, \emph{Acta Math. Acad. Sci. Hungar.} \textbf{12}
+(1961), 235--244.
+\bibitem{szabados} J. Szabados, On a problem of P. Erd\H{o}s,
+\emph{Acta Math. Acad. Sci. Hungar.} \textbf{17} (1966), 155--157.
+\bibitem{esvv} P. Erd\H{o}s, J. Szabados, A. K. Varma and P. V\'ertesi,
+On an interpolation theoretical extremal problem,
+\emph{Studia Sci. Math. Hungar.} \textbf{29} (1994), 55--60.
+\bibitem{bt} L. Brutman and D. Toledano, An extremal problem of
+Erd\H{o}s in interpolation theory, \emph{Comput. Math. Appl.}
+\textbf{34} (1997), no.~12, 37--47,
+\url{https://doi.org/10.1016/S0898-1221(97)00232-0}.
+\bibitem{bloom} T. F. Bloom, Erd\H{o}s Problem 1131 and discussion,
+\url{https://www.erdosproblems.com/1131},
+\url{https://www.erdosproblems.com/forum/thread/1131},
+accessed 23 October 2026.
+\bibitem{lean} \texttt{seanm27lol}, A Lean disproof of Erd\H{o}s
+Problem 1131, mathematical exposition and Lean~4 repository,
+\url{https://github.com/seanm27lol/erdos-1131-lean},
+accessed 23 October 2026. The formalization is not used here.
+\bibitem{rafik} Z. Rafik, Asymptotics of Erd\H{o}s's $L^2$ Lagrange
+interpolation problem: arcsine distribution and Airy endpoint
+universality, preprint (2026),
+\url{https://doi.org/10.20944/preprints202601.0875.v1};
+revised manuscript linked in \cite{bloom}.
+\bibitem{szego} G. Szeg\H{o}, \emph{Orthogonal Polynomials},
+fourth ed., Amer. Math. Soc. Colloq. Publ., vol.~23,
+American Mathematical Society, Providence, RI, 1975.
+\bibitem{hmw} R. Hunt, B. Muckenhoupt and R. Wheeden,
+Weighted norm inequalities for the conjugate function and Hilbert
+transform, \emph{Trans. Amer. Math. Soc.} \textbf{176} (1973),
+227--251.
+\bibitem{gcrf} J. Garc\'ia-Cuerva and J. L. Rubio de Francia,
+\emph{Weighted Norm Inequalities and Related Topics},
+North-Holland Math. Stud., vol.~116, North-Holland, Amsterdam, 1985.
+\bibitem{duren} P. L. Duren, \emph{Theory of $H^p$ Spaces},
+Pure Appl. Math., vol.~38, Academic Press, New York, 1970.
+\bibitem{frank} R. L. Frank and R. Seiringer, Non-linear ground state
+representations and sharp Hardy inequalities,
+\emph{J. Funct. Anal.} \textbf{255} (2008), 3407--3430.
+\bibitem{dlmf} NIST Digital Library of Mathematical Functions,
+\url{https://dlmf.nist.gov/}, especially 10.22.57, 15.4.20 and 18.15.4\_5.
+\end{thebibliography}
+\end{document}

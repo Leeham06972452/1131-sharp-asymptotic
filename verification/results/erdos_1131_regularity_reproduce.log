@@ -1,0 +1,7 @@
+{
+  "cases": 8,
+  "max_transport_error": 5.218048215738236e-15,
+  "max_reciprocal_error": 1.4921397450962104e-13,
+  "max_interpolation_error": 2.708944180085382e-14,
+  "output": "D:\\astra\\ERDOS\\1131\\paper\\verification\\results\\regularity.json"
+}

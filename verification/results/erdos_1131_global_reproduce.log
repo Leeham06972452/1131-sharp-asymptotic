@@ -1,0 +1,32 @@
+{
+  "saved": "D:\\astra\\ERDOS\\1131\\paper\\verification\\results\\global.json",
+  "candidate_C_star": 1.0942198076132386,
+  "factorization_errors": [
+    -3.5093505879046916e-10,
+    -5.032264605020487e-10,
+    -4.440653400550332e-10
+  ],
+  "collision_cases": [
+    {
+      "n": 40,
+      "inverse_operator_norm": 3.172465123513532,
+      "scaled_objective_cost": 27.49935491195142
+    },
+    {
+      "n": 80,
+      "inverse_operator_norm": 3.742780140245198,
+      "scaled_objective_cost": 40.04668655976536
+    },
+    {
+      "n": 160,
+      "inverse_operator_norm": 4.4293306579528835,
+      "scaled_objective_cost": 57.779103133588166
+    },
+    {
+      "n": 320,
+      "inverse_operator_norm": 5.251126699210386,
+      "scaled_objective_cost": 82.8447716590425
+    }
+  ],
+  "smooth_phase_coefficient_prediction": 1.0042977153764387
+}

@@ -1,0 +1,52 @@
+{
+  "candidate_constant": 1.0942198076132386,
+  "prediction_modulus_eta": "0.2*x",
+  "phase_delta": "0.2*sin(theta)",
+  "continuum_defect": [
+    {
+      "quadrature_order": 128,
+      "defect": 0.03920424637991235
+    },
+    {
+      "quadrature_order": 256,
+      "defect": 0.03920424637991235
+    },
+    {
+      "quadrature_order": 512,
+      "defect": 0.03920424637991236
+    }
+  ],
+  "finite_objectives": [
+    {
+      "n": 64,
+      "reference_coefficient": 1.095404814298746,
+      "perturbed_coefficient": 1.0566514257785826,
+      "scaled_excess": 0.03875338852016341
+    },
+    {
+      "n": 128,
+      "reference_coefficient": 1.0947708380608958,
+      "perturbed_coefficient": 1.0557953681469598,
+      "scaled_excess": 0.03897546991393597
+    },
+    {
+      "n": 256,
+      "reference_coefficient": 1.0944849576991373,
+      "perturbed_coefficient": 1.0553959255137215,
+      "scaled_excess": 0.03908903218541582
+    },
+    {
+      "n": 512,
+      "reference_coefficient": 1.0943497899024806,
+      "perturbed_coefficient": 1.055203355503636,
+      "scaled_excess": 0.039146434398844576
+    },
+    {
+      "n": 1024,
+      "reference_coefficient": 1.0942841500695977,
+      "perturbed_coefficient": 1.0551088606916892,
+      "scaled_excess": 0.039175289377908484
+    }
+  ],
+  "status": "Independent floating point checks, not a proof."
+}
