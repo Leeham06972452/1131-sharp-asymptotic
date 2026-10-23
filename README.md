@@ -3,22 +3,26 @@
 Research manuscript and reproducible numerical checks for the sharp
 first-order asymptotic in the quadratic Lagrange interpolation problem.
 
-For distinct nodes $Y=\{y_1,\ldots,y_n\}\subset[-1,1]$, let
-$\ell_j^Y$ be their Lagrange fundamental polynomials and define
-$M_n=\inf_Y\int_{-1}^1\sum_{j=1}^n\ell_j^Y(x)^2\,dx$.
+For distinct nodes $`Y=\{y_1,\ldots,y_n\}\subset[-1,1]`$, let
+$`\ell_j^Y`$ be their Lagrange fundamental polynomials and define
+
+```math
+M_n=\inf_Y\int_{-1}^{1}\sum_{j=1}^{n}\bigl(\ell_j^Y(x)\bigr)^2\,dx.
+```
+
 The manuscript presents a proof of
 
-$$
-M_n=2-\frac{C_*}{n}+o(n^{-1}),\qquad
-C_*=2\frac{\Gamma(5/4)^2}{\Gamma(3/4)^2}
+```math
+M_n=2-\frac{C_{\ast}}{n}+o(n^{-1}),\qquad
+C_{\ast}=2\frac{\Gamma(5/4)^2}{\Gamma(3/4)^2}
 =1.0942198076132386\ldots.
-$$
+```
 
 The proposed asymptotically optimal nodes are the endpoints together with
-the zeros of the Jacobi polynomial $P_{n-2}^{(5/4,5/4)}$. The main
+the zeros of the Jacobi polynomial $`P_{n-2}^{(5/4,5/4)}`$. The main
 contribution claimed by the manuscript is the matching unrestricted lower
 bound. The result concerns the first-order asymptotic, rather than the exact
-minimum or the minimizing nodes for each finite $n$.
+minimum or the minimizing nodes for each finite $`n`$.
 
 ## Paper and supporting files
 
